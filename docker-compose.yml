@@ -1,31 +1,51 @@
-version: '3.8'
+version: "3.8"
+
 services:
   rabbitmq: 
-    image: rabbitmq:management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
-  
-  db:
-    container_name: postgres_container
+       image: rabbitmq:management
+       ports:
+         - "5672:5672"
+         - "15672:15672"
+       environment:
+         RABBITMQ_DEFAULT_USER: admin
+         RABBITMQ_DEFAULT_PASS: admin
+  postgresdb:
     image: postgres
-    restart: always
+    restart: unless-stopped
+    env_file: ./.env
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wattsgood_db
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRESDB_DATABASE
     ports:
-      - "5432:5432"
-      
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
+      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/postgres
+  app:
+    depends_on:
+      - postgresdb
+    build: ./backend/wattsgood
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:postgresql://postgresdb:$POSTGRESDB_DOCKER_PORT/$POSTGRESDB_DATABASE",
+        "spring.datasource.username" : "$POSTGRESDB_USER",
+        "spring.datasource.password" : "$POSTGRESDB_ROOT_PASSWORD",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
+        "spring.jpa.hibernate.ddl-auto" : "update"
+      }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      device: /absolute/path/to/your/db/storage
+      o: bind
