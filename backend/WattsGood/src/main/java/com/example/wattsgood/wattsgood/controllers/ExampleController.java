@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wattsgood.wattsgood.models.Example;
 import com.example.wattsgood.wattsgood.repositories.ExampleRepository;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -40,5 +39,4 @@ public class ExampleController {
     public Optional<Example> getExampleById(@PathVariable Long id) {
         return exampleRepository.findById(id);
     }
-    
 }

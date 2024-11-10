@@ -2,13 +2,14 @@ version: "3.8"
 
 services:
   rabbitmq: 
-       image: rabbitmq:management
-       ports:
-         - "5672:5672"
-         - "15672:15672"
-       environment:
-         RABBITMQ_DEFAULT_USER: admin
-         RABBITMQ_DEFAULT_PASS: admin
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
   postgresdb:
     image: postgres
     restart: unless-stopped
@@ -20,7 +21,18 @@ services:
     ports:
       - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
     volumes:
-      - db:/var/lib/postgres
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com  
+      PGADMIN_DEFAULT_PASSWORD: admin         
+    ports:
+      - "5050:80"  
+    depends_on:
+      - postgresdb
+
   app:
     depends_on:
       - postgresdb
@@ -35,7 +47,7 @@ services:
         "spring.datasource.username" : "$POSTGRESDB_USER",
         "spring.datasource.password" : "$POSTGRESDB_ROOT_PASSWORD",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
-        "spring.jpa.hibernate.ddl-auto" : "update"
+        "spring.jpa.hibernate.ddl-auto" : "create-drop"
       }'
     volumes:
       - .m2:/root/.m2
@@ -44,8 +56,3 @@ services:
 
 volumes:
   db:
-    driver: local
-    driver_opts:
-      type: none
-      device: /absolute/path/to/your/db/storage
-      o: bind
