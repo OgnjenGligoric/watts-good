@@ -1,0 +1,62 @@
+<section class="contact-us section">
+  <div class="container">
+    <div class="inner">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="contact-us-form">
+            <h2>Property registration</h2>
+            <p>If you would like to register a new property, please fill out the form below.</p>
+            <!-- Form -->
+            <form class="form" [formGroup]="propertyRegistrationForm">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="text" formControlName="address" placeholder="Address" >
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="number" formControlName="floorNumber" placeholder="Floor number" required="">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="text" name="phone" placeholder="Phone" required="">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="text" name="subject" placeholder="Subject" required="">
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <textarea name="message" placeholder="Your Message" required=""></textarea>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group login-btn">
+                    <button class="btn" type="submit" (click)="onSubmit()">Register property</button>
+                  </div>
+                  <div class="checkbox">
+                    <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox">Do you want to subscribe our Newsletter ?</label>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!--/ End Form -->
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="contact-us-left">
+            <!--Start Google-map -->
+            <div id="myMap"></div>
+            <!--/End Google-map -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
