@@ -3,6 +3,7 @@ package com.example.WattsGood.controller;
 import com.example.WattsGood.dto.LoginDTO;
 import com.example.WattsGood.dto.UserDTO;
 import com.example.WattsGood.model.User;
+import com.example.WattsGood.service.EmailService;
 import com.example.WattsGood.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserController {
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -67,19 +71,31 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/activate/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> activateUser(@PathVariable String email) {
+    @PostMapping(value = "/activate/{email}/{encoded_password}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> activateUser(@PathVariable String email, @PathVariable String encoded_password) {
         try {
             Optional<User> userOptional = userService.getByEmail(email);
             if(userOptional.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
+
             User user = userOptional.get();
+
+            if(!user.getPassword().equals(encoded_password)){
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
             user = userService.activateUser(user);
 
             return new ResponseEntity<>(new UserDTO(user),HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/send_mail")
+    public ResponseEntity<String> send_mail() {
+        emailService.sendEmail("stefandjurica666@gmail.com", "Niggers", "jigaboo");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
