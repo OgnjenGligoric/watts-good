@@ -65,6 +65,8 @@ public class UserController {
 
             User user = userService.createUser(new User(userDTO, true));
 
+            //add a part where email sender sends an html with a link to frontend that includes {email}/{encoded_password} emailService.sendEmail(userDTO.getEmail(), "Confirm Watts Good Email", "HTML");
+
             return new ResponseEntity<>(new UserDTO(user),HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -93,9 +95,9 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/send_mail")
-    public ResponseEntity<String> send_mail() {
-        emailService.sendEmail("stefandjurica666@gmail.com", "Niggers", "jigaboo");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @GetMapping(value = "/send_mail")
+//    public ResponseEntity<String> send_mail() {
+//        emailService.sendEmail("stefandjurica666@gmail.com", "Niggers", "jigaboo");
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }
