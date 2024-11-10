@@ -12,4 +12,5 @@ public interface IUserService {
     Optional<User> getById(Long id);
     Optional<User> getByEmail(String email);
     List<User> getByRole(UserRole role);
+    User createSuperAdmin();
 }
