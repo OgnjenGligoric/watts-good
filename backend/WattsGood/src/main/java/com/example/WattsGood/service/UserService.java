@@ -36,6 +36,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User activateUser(User user) {
+        user.setActive(true);
+        return userRepository.save(user);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

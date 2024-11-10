@@ -66,4 +66,20 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(value = "/activate/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> activateUser(@PathVariable String email) {
+        try {
+            Optional<User> userOptional = userService.getByEmail(email);
+            if(userOptional.isEmpty()){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            User user = userOptional.get();
+            user = userService.activateUser(user);
+
+            return new ResponseEntity<>(new UserDTO(user),HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
