@@ -48,7 +48,7 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> getById(Long id) {
-        return userRepository.findById(String.valueOf(id));
+        return userRepository.findById(id);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserService implements IUserService {
     public User createSuperAdmin() {
         if (this.getByRole(UserRole.SuperAdmin).isEmpty()) {
             String password = passwordGenerator.generateRandomPassword(PASSWORD_LENGTH);
-            String path = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
+            String path = "./src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
             User superAdmin = new User();
             superAdmin.setEmail("admin");
             superAdmin.setPassword(password);

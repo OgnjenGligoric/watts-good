@@ -27,7 +27,7 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public Optional<Property> getById(Long id) {
-        return propertyRepository.findById(String.valueOf(id));
+        return propertyRepository.findById(id);
     }
 
 
