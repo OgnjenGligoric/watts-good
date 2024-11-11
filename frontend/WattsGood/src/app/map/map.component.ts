@@ -1,20 +1,23 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as L from 'leaflet';
+import {icon} from "leaflet";
+
 @Component({
   selector: 'app-map',
+  templateUrl: './map.component.html',
   standalone: true,
   imports: [],
-  templateUrl: './map.component.html',
-  styleUrl: './map.component.css'
+  styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit{
+export class MapComponent implements OnInit {
 
   private map: any;
   private centroid: L.LatLngExpression = [45.2396, 19.8227];
   private currentMarker: L.Marker | null = null;
 
-  constructor() {
-  }
+  @Output() coordinatesSelected = new EventEmitter<{lat: number, lng: number}>();
+
+  constructor() {}
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -33,25 +36,21 @@ export class MapComponent implements OnInit{
     );
     tiles.addTo(this.map);
     this.markOnClick();
-
   }
 
-  markOnClick(){
+  markOnClick(): void {
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
-      console.log(`Latitude: ${lat}, Longitude: ${lng}`);
       if (this.currentMarker) {
         this.map.removeLayer(this.currentMarker);
       }
       this.currentMarker = L.marker([lat, lng]).addTo(this.map);
+      this.coordinatesSelected.emit({ lat, lng });
     });
   }
 
-
-
   ngOnInit(): void {
-    this.initMap()
+
+    this.initMap();
   }
-
-
 }

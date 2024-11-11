@@ -21,27 +21,32 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="text" name="phone" placeholder="Phone" required="">
+                    <select class="nice-select form-control">
+                      <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="text" name="subject" placeholder="Subject" required="">
+                    <input type="text" formControlName="location" placeholder="Location" readonly>
                   </div>
                 </div>
-                <div class="col-lg-12">
-                  <div class="form-group">
-                    <textarea name="message" placeholder="Your Message" required=""></textarea>
-                  </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Upload images</label>
+                    <input (change)="choosenImageChanged($event)" class="form-control form-group" formControlName="images" type="file" multiple accept="image/*">
                 </div>
+
+                <div class="col-lg-6">
+                  <label class="form-label">Upload legal rights</label>
+                  <input class="form-control form-group" type="file" formControlName="pdf" multiple accept="application/pdf">
+                </div>
+
                 <div class="col-12">
                   <div class="form-group login-btn">
                     <button class="btn" type="submit" (click)="onSubmit()">Register property</button>
                   </div>
-                  <div class="checkbox">
-                    <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox">Do you want to subscribe our Newsletter ?</label>
-                  </div>
                 </div>
+
               </div>
             </form>
             <!--/ End Form -->
@@ -51,7 +56,7 @@
           <div class="contact-us-left">
             <!--Start Google-map -->
             <div id="myMap">
-              <app-map></app-map>
+              <app-map (coordinatesSelected)="updateCoordinates($event)"></app-map>
             </div>
             <!--/End Google-map -->
           </div>
