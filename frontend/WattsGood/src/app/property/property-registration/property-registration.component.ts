@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router} from "express";
+import {MapComponent} from "../../map/map.component";
 
 @Component({
   selector: 'app-property-registration',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MapComponent,
   ],
   templateUrl: './property-registration.component.html',
   styleUrl: './property-registration.component.css'
