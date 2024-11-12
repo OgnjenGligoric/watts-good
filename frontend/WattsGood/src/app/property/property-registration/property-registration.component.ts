@@ -29,8 +29,8 @@ export class PropertyRegistrationComponent{
   uploadedPictures: File[] = [];
 
   propertyRegistrationForm = new FormGroup({
-    address: new FormControl('', [Validators.required]),
-    floorNumber: new FormControl('', [Validators.required]),
+    address: new FormControl('', ),
+    floorNumber: new FormControl('', ),
     location: new FormControl(''),
     images: new FormControl(''),
     pdf: new FormControl(''),
@@ -51,12 +51,12 @@ export class PropertyRegistrationComponent{
     );
   }
 
-  updateCoordinates(event: { lat: number, lng: number }): void {
+  updateCoordinates(event: { lat: number, lng: number, address: string }): void {
     this.latitude = event.lat;
     this.longitude = event.lng;
-
     this.propertyRegistrationForm.patchValue({
       location: `${this.latitude.toFixed(10)},${this.longitude.toFixed(10)}`,
+      address: event.address
     });
   }
 

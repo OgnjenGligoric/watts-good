@@ -1,7 +1,16 @@
 <section class="contact-us section">
-  <div class="container">
+  <div class="container" id="propertyContainer">
     <div class="inner">
       <div class="row">
+        <div class="col-lg-6">
+          <div class="contact-us-left">
+            <!--Start Google-map -->
+            <div id="myMap">
+              <app-map (coordinatesSelected)="updateCoordinates($event)"></app-map>
+            </div>
+            <!--/End Google-map -->
+          </div>
+        </div>
         <div class="col-lg-6">
           <div class="contact-us-form">
             <h2>Property registration</h2>
@@ -16,7 +25,7 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="number" formControlName="floorNumber" placeholder="Floor number" required="">
+                    <input type="number" formControlName="floorNumber" placeholder="Number of floors" required="">
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -40,7 +49,6 @@
                   <label class="form-label">Upload legal rights</label>
                   <input class="form-control form-group" type="file" formControlName="pdf" multiple accept="application/pdf">
                 </div>
-
                 <div class="col-12">
                   <div class="form-group login-btn">
                     <button class="btn" type="submit" (click)="onSubmit()">Register property</button>
@@ -52,13 +60,56 @@
             <!--/ End Form -->
           </div>
         </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="contact-us section">
+  <div class="container">
+    <div class="inner">
+      <div class="row">
         <div class="col-lg-6">
-          <div class="contact-us-left">
-            <!--Start Google-map -->
-            <div id="myMap">
-              <app-map (coordinatesSelected)="updateCoordinates($event)"></app-map>
+
+
+
+
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="contact-us-form">
+              <h2>Household registration</h2>
+              <p>Register a new household to previosly created property. Please fill out the form below.</p>
+              <!-- Form -->
+              <form class="form">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <input type="number" formControlName="" placeholder="Floor number" >
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <input type="number" formControlName="" placeholder="Apartment number">
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <input type="text" formControlName="" placeholder="Squared meters">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group login-btn">
+                      <button class="btn" type="submit" (click)="onSubmit()">Add household</button>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+              <!--/ End Form -->
             </div>
-            <!--/End Google-map -->
           </div>
         </div>
       </div>
@@ -66,5 +117,4 @@
 
   </div>
 </section>
-
 

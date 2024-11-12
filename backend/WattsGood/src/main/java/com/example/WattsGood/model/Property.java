@@ -18,7 +18,8 @@ public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //private User owner;
+    @ManyToOne
+    private User owner;
     private String address;
     @Embedded
     private Location location;
@@ -28,5 +29,7 @@ public class Property {
     private List<Household> households;
     private int numberOfFloors;
     private PropertyRequest requestStatus;
+    private Long submissionDate;
+    private Long completionDate;
 
 }

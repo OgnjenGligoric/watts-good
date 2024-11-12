@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as L from 'leaflet';
 import {icon} from "leaflet";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-map',
@@ -15,9 +16,9 @@ export class MapComponent implements OnInit {
   private centroid: L.LatLngExpression = [45.2396, 19.8227];
   private currentMarker: L.Marker | null = null;
 
-  @Output() coordinatesSelected = new EventEmitter<{lat: number, lng: number}>();
+  @Output() coordinatesSelected = new EventEmitter<{lat: number, lng: number, address: string}>();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -45,7 +46,17 @@ export class MapComponent implements OnInit {
         this.map.removeLayer(this.currentMarker);
       }
       this.currentMarker = L.marker([lat, lng]).addTo(this.map);
-      this.coordinatesSelected.emit({ lat, lng });
+
+      this.http.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`)
+        .subscribe((response: any) => {
+          const addr = response.address;
+          if (addr) {
+            const street = addr.road || addr.street || 'Unknown street';
+            const houseNumber = addr.house_number || 'N/A';
+            const address = `${street} ${houseNumber}`;
+            this.coordinatesSelected.emit({ lat, lng, address });
+          }
+        });
     });
   }
 
