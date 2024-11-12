@@ -50,10 +50,6 @@ public class AuthenticationController {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            if (!authenticatedUser.isActive()) {
-                return new ResponseEntity<>(loginResponse, HttpStatus.FORBIDDEN);
-            }
-
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
 
         } catch (UserNotFoundException e) {

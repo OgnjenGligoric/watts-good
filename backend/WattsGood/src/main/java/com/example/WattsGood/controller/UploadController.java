@@ -4,6 +4,7 @@ import com.example.WattsGood.dto.UserDTO;
 import com.example.WattsGood.model.User;
 import com.example.WattsGood.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -25,7 +26,9 @@ public class UploadController {
     @Autowired
     private IUserService userService;
 
-    public static String USER_IMAGE_DIRECTORY = "./WattsGood/src/main/java/com/example/WattsGood/uploads/user_images/";
+    @Value("${upload.dir}")
+    private String USER_IMAGE_DIRECTORY;
+
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("image") MultipartFile file,

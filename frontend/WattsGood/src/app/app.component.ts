@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NavbarComponent} from "./layout/navbar/navbar.component";
 import {FooterComponent} from "./layout/footer/footer.component";
+import {AuthInterceptor} from "./service/auth.interceptor.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +12,13 @@ import {FooterComponent} from "./layout/footer/footer.component";
     RouterOutlet,
     NavbarComponent,
     FooterComponent,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

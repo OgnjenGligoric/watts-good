@@ -1,0 +1,67 @@
+<section class="contact-us section">
+  <div class="container" id="propertyContainer">
+    <div class="inner">
+      <div class="contact-us-form">
+        <h2>Login</h2>
+        <p></p>
+        <!-- Form -->
+        <form class="form" [formGroup]="loginForm">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="text" id="Email" formControlName="email" required="true">
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" formControlName="password" required="true">
+              </div>
+            </div>
+
+            <!--            <div class="col-lg-6">-->
+            <!--              <div class="form-group">-->
+            <!--                <label for="PasswordRepeat">Repeat Your Password</label>-->
+            <!--                <input type="password" id="PasswordRepeat" formControlName="passwordRepeat" required="true">-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+            <!--            <div class="col-lg-6">-->
+            <!--              <div class="form-group">-->
+            <!--                <label for="Name">Name</label>-->
+            <!--                <input type="text" id="Name" formControlName="name" required="true">-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+            <!--            <div class="col-lg-6">-->
+            <!--              <div class="form-group">-->
+            <!--                <label for="Surname">Surname</label>-->
+            <!--                <input type="text" id="Surname" formControlName="surname" required="true">-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+
+            <!--            <div class="col-lg-6">-->
+            <!--              <div class="form-group">-->
+            <!--                <label for="Image">Upload Profile Picture</label>-->
+            <!--                <input (change)="choosenImageChanged($event)" id="Image" class="form-control" formControlName="image" type="file" accept="image/*">-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+            <div class="row buttons">
+              <div class="col-lg-3 col-md-5 col-sm-4">
+                <button class="btn" type="submit" (click)="onSubmit()">Sign In</button>
+              </div>
+
+              <div class="col-lg-3 col-md-5 col-sm-4">
+                <button class="btn" type="submit" (click)="onSubmit()">Register</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
