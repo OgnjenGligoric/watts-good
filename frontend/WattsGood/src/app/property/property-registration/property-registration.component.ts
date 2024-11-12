@@ -6,6 +6,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {CityService} from "../../service/city.service";
 import {City} from "../../model/City";
 import {CommonModule} from "@angular/common";
+import {MatDialog} from "@angular/material/dialog";
+import {HouseholdCardComponent} from "../../household/household-card/household-card.component";
+import {Household} from "../../model/Household";
 
 @Component({
   selector: 'app-property-registration',
@@ -14,19 +17,21 @@ import {CommonModule} from "@angular/common";
     ReactiveFormsModule,
     MapComponent,
     MatSelectModule,
-    CommonModule
+    CommonModule,
+    HouseholdCardComponent
   ],
   templateUrl: './property-registration.component.html',
   styleUrl: './property-registration.component.css'
 })
 export class PropertyRegistrationComponent{
 
-  constructor(private cityService: CityService) {
+  constructor(private cityService: CityService, private dialog: MatDialog) {
   }
   cities: City[] = [];
   latitude: number | null = null;
   longitude: number | null = null;
   uploadedPictures: File[] = [];
+  households: Household[] = [];
 
   propertyRegistrationForm = new FormGroup({
     address: new FormControl('', ),
@@ -35,6 +40,13 @@ export class PropertyRegistrationComponent{
     images: new FormControl(''),
     pdf: new FormControl(''),
   });
+
+  householdForm = new FormGroup({
+    floorNumber: new FormControl('', Validators.required),
+    apartmentNumber: new FormControl('', Validators.required),
+    squaredMeters: new FormControl('', Validators.required),
+  });
+
 
   ngOnInit(){
     this.loadCities();
@@ -50,6 +62,21 @@ export class PropertyRegistrationComponent{
       }
     );
   }
+
+  addHouseholdCard(): void {
+    const floorNumber = this.householdForm.get('floorNumber')?.value;
+    const apartmentNumber = this.householdForm.get('apartmentNumber')?.value;
+    const squaredMeters = this.householdForm.get('squaredMeters')?.value;
+
+    const household: Household = {
+      floorNumber: floorNumber ? parseInt(floorNumber, 10) : 0,
+      apartmentNumber: apartmentNumber ? parseInt(apartmentNumber, 10) : 0,
+      squaredMeters: squaredMeters ? parseFloat(squaredMeters) : 0
+    };
+    this.households.push(household);
+    this.householdForm.reset();
+  }
+
 
   updateCoordinates(event: { lat: number, lng: number, address: string }): void {
     this.latitude = event.lat;
@@ -68,6 +95,10 @@ export class PropertyRegistrationComponent{
         console.log(files[i]);
       }
     }
+  }
+
+  removeHouseholdCard(index: number): void {
+    this.households.splice(index, 1);
   }
 
 

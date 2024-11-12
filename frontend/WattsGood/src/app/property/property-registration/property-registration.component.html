@@ -3,15 +3,6 @@
     <div class="inner">
       <div class="row">
         <div class="col-lg-6">
-          <div class="contact-us-left">
-            <!--Start Google-map -->
-            <div id="myMap">
-              <app-map (coordinatesSelected)="updateCoordinates($event)"></app-map>
-            </div>
-            <!--/End Google-map -->
-          </div>
-        </div>
-        <div class="col-lg-6">
           <div class="contact-us-form">
             <h2>Property registration</h2>
             <p>If you would like to register a new property, please fill out the form below.</p>
@@ -20,16 +11,19 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="text" formControlName="address" placeholder="Address" >
+                    <label>Address</label>
+                    <input type="text" formControlName="address" placeholder="" >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="number" formControlName="floorNumber" placeholder="Number of floors" required="">
+                    <label>Number of floors</label>
+                    <input type="number" formControlName="floorNumber" placeholder="" required="">
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
+                    <label>City</label>
                     <select class="nice-select form-control">
                       <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
                     </select>
@@ -37,7 +31,8 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input type="text" formControlName="location" placeholder="Location" readonly>
+                    <label>Location</label>
+                    <input type="text" formControlName="location" placeholder="" readonly>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -49,11 +44,11 @@
                   <label class="form-label">Upload legal rights</label>
                   <input class="form-control form-group" type="file" formControlName="pdf" multiple accept="application/pdf">
                 </div>
-                <div class="col-12">
-                  <div class="form-group login-btn">
-                    <button class="btn" type="submit" (click)="onSubmit()">Register property</button>
-                  </div>
-                </div>
+<!--                <div class="col-12">-->
+<!--                  <div class="form-group login-btn">-->
+<!--                    <button class="btn" type="submit" (click)="openDialog()">Add household</button>-->
+<!--                  </div>-->
+<!--                </div>-->
 
               </div>
             </form>
@@ -61,60 +56,63 @@
           </div>
         </div>
 
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class="contact-us section">
-  <div class="container">
-    <div class="inner">
-      <div class="row">
         <div class="col-lg-6">
-
-
-
-
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="contact-us-form">
-              <h2>Household registration</h2>
-              <p>Register a new household to previosly created property. Please fill out the form below.</p>
-              <!-- Form -->
-              <form class="form">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <input type="number" formControlName="" placeholder="Floor number" >
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <input type="number" formControlName="" placeholder="Apartment number">
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <input type="text" formControlName="" placeholder="Squared meters">
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-group login-btn">
-                      <button class="btn" type="submit" (click)="onSubmit()">Add household</button>
-                    </div>
-                  </div>
-
-                </div>
-              </form>
-              <!--/ End Form -->
+          <div class="contact-us-left">
+            <!--Start Google-map -->
+            <div id="myMap">
+              <app-map (coordinatesSelected)="updateCoordinates($event)"></app-map>
             </div>
+            <!--/End Google-map -->
           </div>
         </div>
       </div>
-    </div>
 
+      <div class="row">
+        <div class="contact-us-form">
+          <h2>Households</h2>
+          <p>If you would like to register a new property, please fill out the form below.</p>
+          <!-- Form -->
+          <div class="row">
+            <form class="form" [formGroup]="householdForm">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <mat-label>Floor number</mat-label>
+                    <input type="number" formControlName="floorNumber">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <mat-label>Apartment number</mat-label>
+                    <input type="number" formControlName="apartmentNumber">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <mat-label>Squared meters</mat-label>
+                    <input type="number" formControlName="squaredMeters">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group login-btn">
+                    <mat-label style="color: white">f</mat-label>
+                    <button class="btn" type="submit" (click)="addHouseholdCard()">Add household</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngFor="let household of households; let i = index">
+        <app-household-card
+          [floorNumber]="household.floorNumber"
+          [apartmentNumber]="household.apartmentNumber"
+          [squaredMeters]="household.squaredMeters"
+          (remove)="removeHouseholdCard(i)">
+        </app-household-card>
+      </div>
+
+    </div>
   </div>
 </section>
-
