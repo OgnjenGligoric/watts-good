@@ -25,29 +25,10 @@ services:
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com   # default pgAdmin login email
-      PGADMIN_DEFAULT_PASSWORD: admin          # default pgAdmin login password
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com   
+      PGADMIN_DEFAULT_PASSWORD: admin          
     ports:
-      - "5050:80"  # pgAdmin will be accessible at http://localhost:5050
+      - "5050:80" 
     depends_on:
       - postgresdb
 
-  app:
-    depends_on:
-      - postgresdb
-    build: ./backend/wattsgood
-    env_file: ./.env
-    volumes:
-      - ./backend/wattsgood:/wattsgood
-    ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-    environment:
-      SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:postgresql://postgresdb:$POSTGRESDB_DOCKER_PORT/$POSTGRESDB_DATABASE",
-        "spring.datasource.username" : "$POSTGRESDB_USER",
-        "spring.datasource.password" : "$POSTGRESDB_ROOT_PASSWORD",
-        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
-        "spring.jpa.hibernate.ddl-auto" : "create-drop"
-      }'
-    stdin_open: true
-    tty: true
