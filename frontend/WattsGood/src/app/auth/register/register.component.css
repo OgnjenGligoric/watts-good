@@ -86,13 +86,8 @@
   height: 50px;
 }
 
-.contact-us .form .form-group.register-btn {
-  margin-right: 50px;
-}
-
-.contact-us .form .btn {
+.btn {
   display: inline-block;
-  margin-right: 10px;
   color: #fff;
   line-height: 20px;
   width: 100%;
@@ -101,7 +96,7 @@
   height: 50px;
 }
 
-.contact-us .form .btn:hover {
+.btn:hover {
   background: #1A76D1;
   color: #fff;
 }
@@ -479,7 +474,6 @@
 }
 
 .buttons{
-  padding: 50px;
   justify-content: center;
 }
 
@@ -488,3 +482,21 @@
   font-size: 0.875em;
   margin-top: 0.25em;
 }
+
+.custom-width {
+  width: 80%; /* Default width */
+}
+
+@media (min-width: 576px) { /* Small screens */
+  .custom-width {
+    width: 70%;
+  }
+}
+
+@media (min-width: 900px) { /* Medium screens */
+  .custom-width {
+    width: 50%;
+  }
+}
+
+

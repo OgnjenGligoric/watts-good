@@ -434,6 +434,21 @@
 }
 
 .buttons{
-  padding: 50px;
   justify-content: center;
+}
+
+.custom-width {
+  width: 80%; /* Default width */
+}
+
+@media (min-width: 576px) { /* Small screens */
+  .custom-width {
+    width: 70%;
+  }
+}
+
+@media (min-width: 900px) { /* Medium screens */
+  .custom-width {
+    width: 50%;
+  }
 }
