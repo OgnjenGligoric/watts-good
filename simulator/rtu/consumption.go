@@ -27,7 +27,7 @@ func StartConsumptionData(householdID string, client *rabbitmq.RabbitMQClient) {
 }
 
 func generateConsumption() float64 {
-    currentHour := time.Now().Hour()
+    currentHour := time.Now().Minute() % 24
     if currentHour >= 6 && currentHour <= 22 {
         return rand.Float64()*(800-500) + 500 // Daytime: higher usage
     }
