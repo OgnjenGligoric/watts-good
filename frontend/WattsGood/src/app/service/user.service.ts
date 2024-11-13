@@ -14,8 +14,8 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) {}
 
-  activateUser(): Observable<User> {
-    return this.httpClient.post<User>(`${this.apiUrl}/activate`, {}, {
+  activateUser(password:string): Observable<User> {
+    return this.httpClient.post<User>(`${this.apiUrl}/activate/superAdmin/${password}`, {}, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }

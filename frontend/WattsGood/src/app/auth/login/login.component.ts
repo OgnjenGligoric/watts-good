@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatSelectModule} from "@angular/material/select";
@@ -6,11 +6,11 @@ import {CommonModule} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {PopupComponent} from "../../layout/popup/popup.component";
 import {AuthService} from "../../service/auth.service";
-import {catchError} from "rxjs/operators";
-import {of} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {LoginInfo} from "../../model/LoginInfo";
 import {UserService} from "../../service/user.service";
+import {Role} from "../../model/User";
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -47,11 +47,18 @@ export class LoginComponent {
           if (response && response.token) {
             this.authService.storeToken(response.token);
           }
-          console.log('Token stored:', this.authService.getToken());
 
           this.userService.getAuthenticatedUser().subscribe({
             next: (user) => {
-              console.log('Authenticated User:', user);
+              console.log(user)
+              if(user.active){
+                this.router.navigate(['/']);
+              }
+              else if(user.role == Role.SuperAdmin){
+                this.router.navigate(['/activate-super-admin']);
+              }else{
+                this.showPopup('Activate account', 'Check your email and activate it.')
+              }
             },
             error: (error: HttpErrorResponse) => {
               this.showPopup('Error', 'Could not retrieve user information.');

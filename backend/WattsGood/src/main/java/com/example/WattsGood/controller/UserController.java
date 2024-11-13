@@ -23,12 +23,13 @@ public class UserController {
 
     @Autowired
     private AuthenticationService authenticationService;
-    @PostMapping(value = "/activate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> activateUser() {
+    @PostMapping(value = "/activate/superAdmin/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> activateUser(@PathVariable String password) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = (User) authentication.getPrincipal();
             user = userService.activateUser(user);
+            user = userService.changeUserPassword(user,password);
 
             return new ResponseEntity<>(new UserDTO(user),HttpStatus.OK);
         }catch (Exception e){

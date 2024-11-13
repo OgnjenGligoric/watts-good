@@ -20,6 +20,8 @@ public class UserService implements IUserService {
 
     private static final int PASSWORD_LENGTH = 12;
 
+    private static final String ADMIN_PATH = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -65,7 +67,6 @@ public class UserService implements IUserService {
     public User createSuperAdmin() {
         if (this.getByRole(UserRole.SuperAdmin).isEmpty()) {
             String password = passwordGenerator.generateRandomPassword(PASSWORD_LENGTH);
-            String path = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
             User superAdmin = new User();
             superAdmin.setEmail("admin");
             superAdmin.setPassword(password);
@@ -80,25 +81,38 @@ public class UserService implements IUserService {
             superAdmin.setActive(false);
             superAdmin = this.createUser(superAdmin);
 
-            File file = new File(path);
-
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-
-                FileWriter writer = new FileWriter(file);
-                writer.write(password);
-                writer.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SuperAdminPasswordToFile(password);
 
             return superAdmin;
         }
 
         return this.getByRole(UserRole.SuperAdmin).get(0);
+    }
+
+    @Override
+    public User changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        if(user.getRole() == UserRole.SuperAdmin){
+            SuperAdminPasswordToFile(password);
+        }
+        return userRepository.save(user);
+    }
+
+    private void SuperAdminPasswordToFile(String password) {
+        File file = new File(ADMIN_PATH);
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(password);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

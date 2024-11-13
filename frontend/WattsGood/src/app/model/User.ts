@@ -10,5 +10,9 @@ export interface User {
   phone:string;
   blocked:boolean;
   active:boolean;
-  role:boolean;
+  role:Role;
+}
+
+export enum Role{
+  User = 'User', Admin= 'Admin', SuperAdmin= 'SuperAdmin', Official= 'Official'
 }

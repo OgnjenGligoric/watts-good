@@ -14,4 +14,5 @@ public interface IUserService {
     Optional<User> getByEmail(String email);
     List<User> getByRole(UserRole role);
     User createSuperAdmin();
+    User changeUserPassword(User user, String password);
 }

@@ -6,7 +6,7 @@ import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import { routes } from './app.routes';
 import { MatDialogModule } from '@angular/material/dialog';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {authInterceptorInterceptor} from "./interceptor/auth-interceptor.interceptor";
+import {authInterceptor} from "./interceptor/auth.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withInterceptors([
-      authInterceptorInterceptor
+      authInterceptor
     ])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     importProvidersFrom(BrowserAnimationsModule, MatDialogModule)
