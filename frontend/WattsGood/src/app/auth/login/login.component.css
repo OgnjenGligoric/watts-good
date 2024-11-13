@@ -96,13 +96,13 @@
   color: #fff;
   line-height: 20px;
   width: 100%;
-  background: #333;
+  background: #1A76D1;
   border: none;
   height: 50px;
 }
 
 .contact-us .form .btn:hover {
-  background: #1A76D1;
+  background: #333;
   color: #fff;
 }
 
@@ -435,6 +435,28 @@
 
 .buttons{
   justify-content: center;
+}
+
+.custom-width {
+  width: 80%; /* Default width */
+}
+
+@media (min-width: 576px) { /* Small screens */
+  .custom-width {
+    width: 70%;
+  }
+}
+
+@media (min-width: 900px) { /* Medium screens */
+  .custom-width {
+    width: 50%;
+  }
+}
+
+.error-text {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25em;
 }
 
 .custom-width {

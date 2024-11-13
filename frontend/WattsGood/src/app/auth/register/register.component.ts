@@ -166,13 +166,6 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if(this.uploadedPicture != null){
-
-
-    }
-
-
-
     if (this.registerForm.valid && this.passwordsMatch && this.uploadedPicture != null) {
       const user:User = {
         id: 0,

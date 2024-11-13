@@ -31,9 +31,35 @@ export class LoginComponent {
   }
 
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
+
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  get emailErrorMessage(): string {
+    if (this.email?.hasError('required')) {
+      return 'Email is required.';
+    } else if (this.email?.hasError('email')) {
+      return 'Enter a valid email address.';
+    }
+    return '';
+  }
+
+  get passwordErrorMessage(): string {
+    if (this.password?.hasError('required')) {
+      return 'Password is required.';
+    } else if (this.password?.hasError('minlength')) {
+      return 'Password must be at least 6 characters long.';
+    }
+    return '';
+  }
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -82,7 +108,7 @@ export class LoginComponent {
         }
       });
     } else {
-      this.showPopup('Invalid Form', 'Please fill out all required fields.')
+      this.loginForm.markAllAsTouched();
     }
   }
 
