@@ -65,7 +65,7 @@ public class UserService implements IUserService {
     public User createSuperAdmin() {
         if (this.getByRole(UserRole.SuperAdmin).isEmpty()) {
             String password = passwordGenerator.generateRandomPassword(PASSWORD_LENGTH);
-            String path = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
+            String path = "./src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
             User superAdmin = new User();
             superAdmin.setEmail("admin");
             superAdmin.setPassword(password);
