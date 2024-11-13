@@ -3,33 +3,32 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {environment} from "../../env/env";
+import {User} from "../model/User";
+import {LoginInfo} from "../model/LoginInfo";
+import {LoginResponse} from "../model/LoginResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private apiUrl = `${environment.apiHost}auth`;
+
   constructor(private httpClient: HttpClient) {}
 
-  register(user: any): Observable<any> {
-    return this.httpClient.post(`${environment.apiHost}auth/register`, user, {
+  register(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${this.apiUrl}/register`, user, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
 
-  login(credentials: any): Observable<any> {
-    return this.httpClient.post(`${environment.apiHost}auth/login`, credentials, {
+  login(credentials: LoginInfo): Observable<LoginResponse> {
+    return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, credentials, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    }).pipe(
-      tap((response: any) => {
-        if (response && response.jwtToken) {
-          this.storeToken(response.jwtToken);
-        }
-      })
-    );
+    });
   }
 
-  private storeToken(token: string) {
+  storeToken(token: string) {
     localStorage.setItem('token', token);
   }
 

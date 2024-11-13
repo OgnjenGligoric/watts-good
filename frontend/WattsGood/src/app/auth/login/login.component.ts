@@ -10,6 +10,7 @@ import {catchError} from "rxjs/operators";
 import {of} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {LoginInfo} from "../../model/LoginInfo";
+import {UserService} from "../../service/user.service";
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -23,7 +24,10 @@ import {LoginInfo} from "../../model/LoginInfo";
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private dialog: MatDialog, private authService:AuthService, private router: Router) {
+  constructor(private dialog: MatDialog,
+              private authService:AuthService,
+              private router: Router,
+              private userService: UserService) {
   }
 
   loginForm = new FormGroup({
@@ -40,60 +44,49 @@ export class LoginComponent {
 
       this.authService.login(loginInfo).subscribe({
         next: (response) => {
-          // Handle successful response
-          console.log('Login successful', response);
+          if (response && response.token) {
+            this.authService.storeToken(response.token);
+          }
+          console.log('Token stored:', this.authService.getToken());
+
+          this.userService.getAuthenticatedUser().subscribe({
+            next: (user) => {
+              console.log('Authenticated User:', user);
+            },
+            error: (error: HttpErrorResponse) => {
+              this.showPopup('Error', 'Could not retrieve user information.');
+              console.error('Error fetching authenticated user:', error.message);
+              this.authService.logout();
+            }
+          });
         },
         error: (error: HttpErrorResponse) => {
+          console.log(error.status);
+
           if (error.status === 404) {
-            console.log('User not found');
+            this.showPopup('User not found', 'Try again.')
           } else if (error.status === 403) {
-            console.log('User is blocked or inactive');
+            this.showPopup('Invalid login credentials', ' Please check your email and password and try again.')
+          } else if (error.status === 401) {
+            this.showPopup('User is blocked', '')
           } else {
-            console.error('An error occurred:', error.message);
+            this.showPopup('An error occurred', 'Please try again later.')
           }
         }
       });
     } else {
-      this.dialog.open(PopupComponent, {
-        width: '300px',
-        disableClose: true,
-        data: {
-          title: 'Invalid Form',
-          message: 'Please fill out all required fields.'
-        }
-      });
+      this.showPopup('Invalid Form', 'Please fill out all required fields.')
     }
   }
 
-  // private handleError(error: any): void {
-  //   if (error.status === 404 ) {
-  //     this.dialog.open(PopupComponent, {
-  //       width: '300px',
-  //       disableClose: true,
-  //       data: {
-  //         title: 'Login Failed',
-  //         message: 'Your email with your password is wrong.'
-  //       }
-  //     });
-  //
-  //   } else if (error.status === 403) {
-  //     this.dialog.open(PopupComponent, {
-  //       width: '300px',
-  //       disableClose: true,
-  //       data: {
-  //         title: 'Login Forbidden',
-  //         message: 'Your account is banned!'
-  //       }
-  //     });
-  //   } else {
-  //     this.dialog.open(PopupComponent, {
-  //       width: '300px',
-  //       disableClose: true,
-  //       data: {
-  //         title: `${error.status}`,
-  //         message: 'Please try again later.'
-  //       }
-  //     });
-  //   }
-  // }
+  private showPopup(tittle:string, message:string){
+    this.dialog.open(PopupComponent, {
+      width: '300px',
+      disableClose: true,
+      data: {
+        title: tittle,
+        message: message
+      }
+    });
+  }
 }

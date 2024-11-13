@@ -29,7 +29,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/images/**", "/api/properties/**", "/api/cities/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/images/**", "/api/users/**", "/api/properties/**", "/api/cities/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

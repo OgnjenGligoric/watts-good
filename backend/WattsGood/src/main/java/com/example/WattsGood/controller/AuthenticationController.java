@@ -27,10 +27,10 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         try {
             User registeredUser = authenticationService.register(userDTO);
-            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+            return new ResponseEntity<>(new UserDTO(registeredUser), HttpStatus.CREATED);
 
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -47,7 +47,7 @@ public class AuthenticationController {
             LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
 
             if (authenticatedUser.isBlocked()) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);

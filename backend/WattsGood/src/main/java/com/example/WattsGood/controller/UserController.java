@@ -39,8 +39,9 @@ public class UserController {
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        System.out.println(authentication.getPrincipal());
         User currentUser = (User) authentication.getPrincipal();
+        System.out.println(currentUser.getEmail());
 
         return new ResponseEntity<>(new UserDTO(currentUser),HttpStatus.OK);
     }
