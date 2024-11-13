@@ -2,7 +2,7 @@ package com.example.WattsGood.controller;
 
 import com.example.WattsGood.dto.UserDTO;
 import com.example.WattsGood.model.User;
-import com.example.WattsGood.service.interfaces.AuthenticationService;
+import com.example.WattsGood.service.AuthenticationService;
 import com.example.WattsGood.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

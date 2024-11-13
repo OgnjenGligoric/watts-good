@@ -28,6 +28,15 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
+                        .configurationSource(request -> {
+                            CorsConfiguration corsConfiguration = new CorsConfiguration();
+                            corsConfiguration.addAllowedOrigin("http://localhost:4200");
+                            corsConfiguration.addAllowedMethod("*");
+                            corsConfiguration.addAllowedHeader("*");
+                            corsConfiguration.setAllowCredentials(true);
+                            return corsConfiguration;
+                        }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/images/**", "/api/users/**", "/api/properties/**", "/api/cities/**").permitAll()
                         .anyRequest().authenticated()

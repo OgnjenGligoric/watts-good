@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import {CityService} from "../../service/city.service";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MapComponent} from "../../map/map.component";
 import {MatSelectModule} from "@angular/material/select";
@@ -8,6 +7,10 @@ import {CommonModule} from "@angular/common";
 import {AuthService} from "../../service/auth.service";
 import {PopupComponent} from "../../layout/popup/popup.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Role, User} from "../../model/User";
+import {catchError, tap} from "rxjs/operators";
+import {HttpEventType} from "@angular/common/http";
+import {of} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -163,8 +166,55 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    if(this.uploadedPicture != null){
+
+
+    }
+
+
+
     if (this.registerForm.valid && this.passwordsMatch && this.uploadedPicture != null) {
-      console.log('Form Submitted:', this.registerForm.value);
+      const user:User = {
+        id: 0,
+        email: this.registerForm.value.email!,
+        password: this.registerForm.value.password!,
+        name: this.registerForm.value.name!,
+        surname: this.registerForm.value.surname!,
+        country: this.registerForm.value.country!,
+        city: this.registerForm.value.city!,
+        street: this.registerForm.value.street!,
+        phone: this.registerForm.value.phone!,
+        blocked:false,
+        active:false,
+        role:Role.User
+      };
+      const formData: FormData = new FormData();
+      formData.append('image', this.uploadedPicture, this.uploadedPicture.name);
+
+      this.authService.register(user).subscribe({
+        next: (response) => {
+          this.authService.uploadFile(formData, this.registerForm.value.email!).subscribe(
+          (response) => {
+            this.showPopup("Registration successful", "You can sign in as soon as you confirm your email.");
+            this.router.navigate(['/sign-in']);
+          },
+          (error) => {
+            console.error('Error uploading profile picture:', error);
+            this.showPopup("Registration Failed", "Unable to upload profile picture. Please try again.");
+          });
+
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            this.showPopup("Registration Failed", "The email address is already in use. Please try a different one.");
+          } else {
+            this.showPopup("Registration Failed", "Unable to register. Please try again.");
+          }
+        }
+      });
+
+
+
     } else {
       this.imageError = this.uploadedPicture == null;
       this.registerForm.markAllAsTouched();

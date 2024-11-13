@@ -16,12 +16,9 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) {}
 
-  register(user: User, file: File): Observable<User> {
-    const formData: FormData = new FormData();
-    formData.append('userDTO', new Blob([JSON.stringify(user)], { type: 'application/json' }));
-    formData.append('image', file, file.name);
-    return this.httpClient.post<User>(`${this.apiUrl}/register`, formData, {
-      headers: new HttpHeaders({ 'Accept': 'application/json' })
+  register(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${this.apiUrl}/register`, user, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
 
@@ -29,6 +26,10 @@ export class AuthService {
     return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, credentials, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
+  }
+
+  uploadFile(formData: FormData, email:string): Observable<any>{
+    return this.httpClient.post<any>(`${environment.apiHost}images/upload/${email}`, formData);
   }
 
   storeToken(token: string) {

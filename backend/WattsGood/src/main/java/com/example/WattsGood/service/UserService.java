@@ -6,6 +6,7 @@ import com.example.WattsGood.service.interfaces.IUserService;
 import com.example.WattsGood.util.PasswordGenerator;
 import com.example.WattsGood.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class UserService implements IUserService {
 
     private static final int PASSWORD_LENGTH = 12;
 
-    private static final String ADMIN_PATH = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
+    @Value("${upload.dir}/superAdminPassword.txt")
+    private String ADMIN_PATH;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -64,7 +66,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User createSuperAdmin() {
+    public void createSuperAdmin() {
         if (this.getByRole(UserRole.SuperAdmin).isEmpty()) {
             String password = passwordGenerator.generateRandomPassword(PASSWORD_LENGTH);
             User superAdmin = new User();
@@ -83,10 +85,10 @@ public class UserService implements IUserService {
 
             SuperAdminPasswordToFile(password);
 
-            return superAdmin;
+            return;
         }
 
-        return this.getByRole(UserRole.SuperAdmin).get(0);
+        this.getByRole(UserRole.SuperAdmin);
     }
 
     @Override
@@ -96,6 +98,11 @@ public class UserService implements IUserService {
             SuperAdminPasswordToFile(password);
         }
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        userRepository.deleteByEmail(email);
     }
 
     private void SuperAdminPasswordToFile(String password) {

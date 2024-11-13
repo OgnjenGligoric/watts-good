@@ -1,5 +1,6 @@
 package com.example.WattsGood.controller;
 
+import com.example.WattsGood.dto.ImageUploadResponse;
 import com.example.WattsGood.dto.UserDTO;
 import com.example.WattsGood.model.User;
 import com.example.WattsGood.service.interfaces.IUserService;
@@ -26,33 +27,42 @@ public class UploadController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.dir}")
+    @Value("${upload.dir}/user_images")
     private String USER_IMAGE_DIRECTORY;
 
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("image") MultipartFile file,
-                                             @RequestParam("email") String email) throws IOException {
-        Optional<User> optionalUser = userService.getByEmail(email);
+    @PostMapping("/upload/{email}")
+    public ResponseEntity<ImageUploadResponse> uploadFile(@RequestParam("image") MultipartFile file,
+                                                          @PathVariable("email") String email) throws IOException {
+        System.out.println("Email: " + email);
 
+        Optional<User> optionalUser = userService.getByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-
             String originalFilename = file.getOriginalFilename();
+
             String extension = "";
 
             if (originalFilename != null && originalFilename.contains(".")) {
                 extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
-
             String filename = user.getId() + extension;
-
             Path fileStorage = Paths.get(USER_IMAGE_DIRECTORY, filename).toAbsolutePath().normalize();
 
-            Files.copy(file.getInputStream(), fileStorage, StandardCopyOption.REPLACE_EXISTING);
+            if (!Files.exists(fileStorage.getParent())) {
+                System.out.println("da1");
+                Files.createDirectories(fileStorage.getParent());
+            }
 
+            try {
+                Files.copy(file.getInputStream(), fileStorage, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                System.err.println("Error copying file: " + e.getMessage());
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            System.out.println("da2");
 
-            return new ResponseEntity<>(filename, HttpStatus.OK);
+            return new ResponseEntity<>(new ImageUploadResponse(file.getOriginalFilename()), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
