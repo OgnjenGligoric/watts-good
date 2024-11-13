@@ -13,7 +13,7 @@ func failOnError(err error, msg string) {
 }
 
 func main() {
-    conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+    conn, err := amqp.Dial("amqp://admin:admin@localhost:5672/")
     failOnError(err, "Failed to connect to RabbitMQ")
     defer conn.Close()
 
@@ -42,5 +42,5 @@ func main() {
             Body:        []byte(body),
         })
     failOnError(err, "Failed to publish a message")
-    fmt.Println(" [x] Sent", body)
+    fmt.Println(" [x] Sent:", body)
 }
