@@ -2,15 +2,15 @@
   <div class="container" id="propertyContainer">
     <div class="inner">
       <div class="contact-us-form">
-        <h2>Login</h2>
-        <p></p>
+        <h2>Register</h2>
         <!-- Form -->
-        <form class="form" [formGroup]="loginForm">
+        <form class="form" [formGroup]="registerForm">
           <div class="row">
             <div class="col-lg-6">
               <div class="form-group">
                 <label for="Email">Email</label>
-                <input type="text" id="Email" formControlName="email" required="true">
+                <input type="email" id="Email" formControlName="email" required="true">
+                <div *ngIf="email?.touched && email?.invalid" class="error-text">{{ emailErrorMessage }}</div>
               </div>
             </div>
 
@@ -18,43 +18,75 @@
               <div class="form-group">
                 <label for="Password">Password</label>
                 <input type="password" id="Password" formControlName="password" required="true">
+                <div *ngIf="password?.touched && password?.invalid" class="error-text">{{ passwordErrorMessage }}</div>
               </div>
             </div>
 
-            <!--            <div class="col-lg-6">-->
-            <!--              <div class="form-group">-->
-            <!--                <label for="PasswordRepeat">Repeat Your Password</label>-->
-            <!--                <input type="password" id="PasswordRepeat" formControlName="passwordRepeat" required="true">-->
-            <!--              </div>-->
-            <!--            </div>-->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="RePassword">Repeat Your Password</label>
+                <input type="password" id="RePassword" formControlName="rePassword" required="true">
+                <div *ngIf="rePassword?.touched && rePassword?.invalid || !passwordsMatch" class="error-text">{{ rePasswordErrorMessage }}</div>
+              </div>
+            </div>
 
-            <!--            <div class="col-lg-6">-->
-            <!--              <div class="form-group">-->
-            <!--                <label for="Name">Name</label>-->
-            <!--                <input type="text" id="Name" formControlName="name" required="true">-->
-            <!--              </div>-->
-            <!--            </div>-->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" formControlName="name" required="true">
+                <div *ngIf="name?.touched && name?.invalid" class="error-text">{{ nameErrorMessage }}</div>
+              </div>
+            </div>
 
-            <!--            <div class="col-lg-6">-->
-            <!--              <div class="form-group">-->
-            <!--                <label for="Surname">Surname</label>-->
-            <!--                <input type="text" id="Surname" formControlName="surname" required="true">-->
-            <!--              </div>-->
-            <!--            </div>-->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Surname">Surname</label>
+                <input type="text" id="Surname" formControlName="surname" required="true">
+                <div *ngIf="surname?.touched && surname?.invalid" class="error-text">{{ surnameErrorMessage }}</div>
+              </div>
+            </div>
 
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Country">Country</label>
+                <input type="text" id="Country" formControlName="country" required="true">
+                <div *ngIf="country?.touched && country?.invalid" class="error-text">{{ countryErrorMessage }}</div>
+              </div>
+            </div>
 
-            <!--            <div class="col-lg-6">-->
-            <!--              <div class="form-group">-->
-            <!--                <label for="Image">Upload Profile Picture</label>-->
-            <!--                <input (change)="choosenImageChanged($event)" id="Image" class="form-control" formControlName="image" type="file" accept="image/*">-->
-            <!--              </div>-->
-            <!--            </div>-->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="City">City</label>
+                <input type="text" id="City" formControlName="city" required="true">
+                <div *ngIf="city?.touched && city?.invalid" class="error-text">{{ cityErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Street">Street</label>
+                <input type="text" id="Street" formControlName="street" required="true">
+                <div *ngIf="street?.touched && street?.invalid" class="error-text">{{ streetErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Phone">Phone</label>
+                <input type="tel" id="Phone" formControlName="phone" required="true">
+                <div *ngIf="phone?.touched && phone?.invalid" class="error-text">{{ phoneErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Image">Upload Profile Picture</label>
+                <input (change)="chosenImageChanged($event)" id="Image" class="form-control" formControlName="image" type="file" accept="image/*">
+                <div *ngIf="imageError" class="error-text">Please upload a profile picture.</div>
+              </div>
+            </div>
 
             <div class="row buttons">
-              <div class="col-lg-3 col-md-5 col-sm-4">
-                <button class="btn" type="submit" (click)="onSubmit()">Sign In</button>
-              </div>
-
               <div class="col-lg-3 col-md-5 col-sm-4">
                 <button class="btn" type="submit" (click)="onSubmit()">Register</button>
               </div>

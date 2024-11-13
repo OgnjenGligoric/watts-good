@@ -16,9 +16,12 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) {}
 
-  register(user: User): Observable<User> {
-    return this.httpClient.post<User>(`${this.apiUrl}/register`, user, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  register(user: User, file: File): Observable<User> {
+    const formData: FormData = new FormData();
+    formData.append('userDTO', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+    formData.append('image', file, file.name);
+    return this.httpClient.post<User>(`${this.apiUrl}/register`, formData, {
+      headers: new HttpHeaders({ 'Accept': 'application/json' })
     });
   }
 

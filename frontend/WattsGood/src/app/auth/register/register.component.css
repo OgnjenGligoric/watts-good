@@ -465,11 +465,9 @@
   margin-bottom: 20px;
 }
 .main-sidebar .side-tags .tag li a {
-  background: #fff;
   color: #333;
   padding: 8px 14px;
   text-transform: capitalize;
-  border-radius: 0;
   font-size: 13px;
   background: #F6F7FB;
   border-radius: 4px;
@@ -483,5 +481,10 @@
 .buttons{
   padding: 50px;
   justify-content: center;
+}
 
+.error-text {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25em;
 }
