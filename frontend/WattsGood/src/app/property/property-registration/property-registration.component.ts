@@ -1,5 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  ɵCoerceStrArrToNumArr, ɵFormGroupRawValue, ɵNavigate, ɵTypedOrUntyped
+} from "@angular/forms";
 import {Router} from "express";
 import {MapComponent} from "../../map/map.component";
 import {MatSelectModule} from "@angular/material/select";
@@ -31,20 +38,21 @@ export class PropertyRegistrationComponent{
   latitude: number | null = null;
   longitude: number | null = null;
   uploadedPictures: File[] = [];
+  uploadedPdfs: File[] = [];
   households: Household[] = [];
 
   propertyRegistrationForm = new FormGroup({
-    address: new FormControl('', ),
-    floorNumber: new FormControl('', ),
-    location: new FormControl(''),
-    images: new FormControl(''),
-    pdf: new FormControl(''),
+    address: new FormControl('', [Validators.required]),
+    floorNumber: new FormControl('',[Validators.required] ),
+    location: new FormControl('',[Validators.required]),
+    images: new FormControl('',[Validators.required]),
+    pdf: new FormControl('',[Validators.required]),
   });
 
   householdForm = new FormGroup({
-    floorNumber: new FormControl('', Validators.required),
-    apartmentNumber: new FormControl('', Validators.required),
-    squaredMeters: new FormControl('', Validators.required),
+    floorNumber: new FormControl('', [Validators.required, Validators.min(0)]),
+    apartmentNumber: new FormControl('', [Validators.required, Validators.min(0)]),
+    squaredMeters: new FormControl('', [Validators.required, Validators.min(0)])
   });
 
 
@@ -73,8 +81,18 @@ export class PropertyRegistrationComponent{
       apartmentNumber: apartmentNumber ? parseInt(apartmentNumber, 10) : 0,
       squaredMeters: squaredMeters ? parseFloat(squaredMeters) : 0
     };
-    this.households.push(household);
-    this.householdForm.reset();
+
+    if (
+      this.householdForm.valid &&
+      this.isUniqueApartmentNumber(household.apartmentNumber) &&
+      this.isValidSquaredMeters(household.squaredMeters) &&
+      this.isValidFloorNumber(household.floorNumber)
+    ) {
+      this.households.push(household);
+      this.householdForm.reset();
+    }else{
+      alert("Please insert valid values into household form! ")
+    }
   }
 
 
@@ -87,20 +105,51 @@ export class PropertyRegistrationComponent{
     });
   }
 
-  choosenImageChanged($event: Event) {
+  imageChanged($event: Event) {
     const files: FileList | null = ($event.target as HTMLInputElement).files;
     if (files) {
       for (let i = 0; i < files.length; i++) {
         this.uploadedPictures.push(files[i]);
-        console.log(files[i]);
       }
     }
+  }
+
+  pdfChanged($event: Event) {
+    const files: FileList | null = ($event.target as HTMLInputElement).files;
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        this.uploadedPdfs.push(files[i]);
+      }
+    }
+  }
+
+  private isUniqueApartmentNumber(apartmentNumber: number | null): boolean {
+    if (apartmentNumber !== null && this.households.some(h => h.apartmentNumber === apartmentNumber)) {
+      return false;
+    }
+    return true;
+  }
+
+  private isValidSquaredMeters(squaredMeters: number | null): boolean {
+    if (squaredMeters === null || squaredMeters <= 0) {
+      return false;
+    }
+    return true;
+  }
+
+  private isValidFloorNumber(floorNumber: number | null): boolean {
+    const maxFloors = this.propertyRegistrationForm.get('floorNumber')?.value;
+    const maxFloorsNumber = maxFloors ? parseInt(maxFloors, 10) : 1;
+
+    if (floorNumber !== null && maxFloorsNumber !== undefined && floorNumber > maxFloorsNumber) {
+      return false;
+    }
+    return true;
   }
 
   removeHouseholdCard(index: number): void {
     this.households.splice(index, 1);
   }
-
 
   onSubmit() {
     if (this.propertyRegistrationForm.valid) {

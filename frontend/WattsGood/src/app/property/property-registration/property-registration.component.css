@@ -5,6 +5,10 @@
   margin-top: 50px;
 }
 
+table {
+  width: 100%;
+}
+
 .contact-us .contact-us-left {
   width: 100%;
   height: 100%;
@@ -20,7 +24,7 @@
   color: #333;
   font-weight: 600;
   line-height: 27px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 12px;
   padding-bottom: 20px;
   text-align: left;
