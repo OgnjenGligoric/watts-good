@@ -32,6 +32,7 @@ export class RegisterComponent {
   }
   uploadedPicture:File|null = null;
   imageError: boolean = false;
+  loading: boolean = false;
 
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -56,6 +57,69 @@ export class RegisterComponent {
     if (files) {
       this.uploadedPicture = files[0];
     }
+  }
+
+
+  onSubmit() {
+    if (this.registerForm.valid && this.passwordsMatch && this.uploadedPicture != null) {
+      const user:User = {
+        id: 0,
+        email: this.registerForm.value.email!,
+        password: this.registerForm.value.password!,
+        name: this.registerForm.value.name!,
+        surname: this.registerForm.value.surname!,
+        country: this.registerForm.value.country!,
+        city: this.registerForm.value.city!,
+        street: this.registerForm.value.street!,
+        phone: this.registerForm.value.phone!,
+        blocked:false,
+        active:false,
+        role:Role.User
+      };
+      const formData: FormData = new FormData();
+      formData.append('image', this.uploadedPicture, this.uploadedPicture.name);
+
+      this.loading = true;
+      this.authService.register(user).subscribe({
+        next: (response) => {
+          this.authService.uploadFile(formData, this.registerForm.value.email!).subscribe(
+          (response) => {
+            this.loading = false;
+            this.showPopup("Registration successful", "You can sign in as soon as you confirm your email.");
+            this.router.navigate(['/sign-in']);
+          },
+          (error) => {
+            this.loading = false;
+            console.error('Error uploading profile picture:', error);
+            this.showPopup("Registration Failed", "Unable to upload profile picture. Please try again.");
+          });
+
+        },
+        error: (error) => {
+          this.loading = false;
+          if (error.status === 409) {
+            this.showPopup("Registration Failed", "The email address is already in use. Please try a different one.");
+          } else {
+            this.showPopup("Registration Failed", "Unable to register. Please try again.");
+          }
+        }
+      });
+
+    } else {
+      this.imageError = this.uploadedPicture == null;
+      this.registerForm.markAllAsTouched();
+    }
+  }
+
+  private showPopup(tittle:string, message:string){
+    this.dialog.open(PopupComponent, {
+      width: '300px',
+      disableClose: true,
+      data: {
+        title: tittle,
+        message: message
+      }
+    });
   }
 
   get email() {
@@ -165,63 +229,4 @@ export class RegisterComponent {
     return '';
   }
 
-  onSubmit() {
-    if (this.registerForm.valid && this.passwordsMatch && this.uploadedPicture != null) {
-      const user:User = {
-        id: 0,
-        email: this.registerForm.value.email!,
-        password: this.registerForm.value.password!,
-        name: this.registerForm.value.name!,
-        surname: this.registerForm.value.surname!,
-        country: this.registerForm.value.country!,
-        city: this.registerForm.value.city!,
-        street: this.registerForm.value.street!,
-        phone: this.registerForm.value.phone!,
-        blocked:false,
-        active:false,
-        role:Role.User
-      };
-      const formData: FormData = new FormData();
-      formData.append('image', this.uploadedPicture, this.uploadedPicture.name);
-
-      this.authService.register(user).subscribe({
-        next: (response) => {
-          this.authService.uploadFile(formData, this.registerForm.value.email!).subscribe(
-          (response) => {
-            this.showPopup("Registration successful", "You can sign in as soon as you confirm your email.");
-            this.router.navigate(['/sign-in']);
-          },
-          (error) => {
-            console.error('Error uploading profile picture:', error);
-            this.showPopup("Registration Failed", "Unable to upload profile picture. Please try again.");
-          });
-
-        },
-        error: (error) => {
-          if (error.status === 409) {
-            this.showPopup("Registration Failed", "The email address is already in use. Please try a different one.");
-          } else {
-            this.showPopup("Registration Failed", "Unable to register. Please try again.");
-          }
-        }
-      });
-
-
-
-    } else {
-      this.imageError = this.uploadedPicture == null;
-      this.registerForm.markAllAsTouched();
-    }
-  }
-
-  private showPopup(tittle:string, message:string){
-    this.dialog.open(PopupComponent, {
-      width: '300px',
-      disableClose: true,
-      data: {
-        title: tittle,
-        message: message
-      }
-    });
-  }
 }

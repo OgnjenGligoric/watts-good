@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                             return corsConfiguration;
                         }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/images/**", "/api/users/**", "/api/properties/**", "/api/cities/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/images/**", "/api/users/activate/**", "/api/properties/**", "/api/cities/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

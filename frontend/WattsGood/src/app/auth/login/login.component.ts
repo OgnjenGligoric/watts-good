@@ -31,9 +31,10 @@ export class LoginComponent {
   }
 
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
+  loading: boolean = false;
 
   get email() {
     return this.loginForm.get('email');
@@ -68,6 +69,7 @@ export class LoginComponent {
 
       let loginInfo: LoginInfo = {email, password};
 
+      this.loading = true;
       this.authService.login(loginInfo).subscribe({
         next: (response) => {
           if (response && response.token) {
@@ -76,7 +78,8 @@ export class LoginComponent {
 
           this.userService.getAuthenticatedUser().subscribe({
             next: (user) => {
-              console.log(user)
+              this.loading = false;
+
               if(user.active){
                 this.router.navigate(['/']);
               }
@@ -87,14 +90,14 @@ export class LoginComponent {
               }
             },
             error: (error: HttpErrorResponse) => {
+              this.loading = false;
               this.showPopup('Error', 'Could not retrieve user information.');
-              console.error('Error fetching authenticated user:', error.message);
               this.authService.logout();
             }
           });
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error.status);
+          this.loading = false;
 
           if (error.status === 404) {
             this.showPopup('User not found', 'Try again.')

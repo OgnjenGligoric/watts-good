@@ -24,7 +24,10 @@
 
             <div class="row buttons">
               <div class="col-lg-4 col-md-5 col-sm-4">
-                <button class="btn" type="submit" (click)="onSubmit()">Sign In</button>
+                <button class="btn d-flex align-items-center" type="submit" (click)="onSubmit()" [disabled]="loading">
+                  <div class="flex-grow-1">Sign in</div>
+                  <div *ngIf="loading" class="spinner ml-2"></div>
+                </button>
               </div>
 
               <div class="col-lg-4 col-md-5 col-sm-4">

@@ -30,22 +30,22 @@ export class ActivateSuperAdminComponent {
               private userService: UserService) {
   }
 
-  loginForm = new FormGroup({
+  activateForm = new FormGroup({
     rePassword: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const rePassword = this.loginForm.controls['rePassword']?.value || "";
-      const password = this.loginForm.controls['password']?.value || "";
+    if (this.activateForm.valid) {
+      const rePassword = this.activateForm.controls['rePassword']?.value || "";
+      const password = this.activateForm.controls['password']?.value || "";
 
       if(password !== rePassword){
         this.showPopup('Invalid Form', 'Passwords need to match.');
         return;
       }
 
-      this.userService.activateUser(password).subscribe({
+      this.userService.activateSuperAdmin(password).subscribe({
         next: (user) => {
           this.authService.logout();
           this.router.navigate(['/sign-in']);

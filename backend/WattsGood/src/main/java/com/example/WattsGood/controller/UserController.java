@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/api/users")
 @RestController
@@ -24,7 +25,7 @@ public class UserController {
     @Autowired
     private AuthenticationService authenticationService;
     @PostMapping(value = "/activate/superAdmin/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> activateUser(@PathVariable String password) {
+    public ResponseEntity<UserDTO> activateSuperAdmin(@PathVariable String password) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = (User) authentication.getPrincipal();
@@ -37,12 +38,24 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/activate/{email}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> activateUser(@PathVariable String password, @PathVariable String email) {
+        Optional<User> userOptional = userService.getByEmail(email);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            if(user.getPassword().equals(password)){
+                user = userService.activateUser(user);
+                return new ResponseEntity<>(new UserDTO(user),HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getPrincipal());
         User currentUser = (User) authentication.getPrincipal();
-        System.out.println(currentUser.getEmail());
 
         return new ResponseEntity<>(new UserDTO(currentUser),HttpStatus.OK);
     }

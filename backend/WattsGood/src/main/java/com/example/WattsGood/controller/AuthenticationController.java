@@ -8,6 +8,7 @@ import com.example.WattsGood.service.JwtService;
 import com.example.WattsGood.service.AuthenticationService;
 import com.example.WattsGood.util.exceptions.UserAlreadyExistsException;
 import com.example.WattsGood.util.exceptions.UserNotFoundException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class AuthenticationController {
             User registeredUser = authenticationService.register(userDTO);
 
             return new ResponseEntity<>(new UserDTO(registeredUser), HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException e) {
+        } catch (UserAlreadyExistsException | MessagingException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
