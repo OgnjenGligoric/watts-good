@@ -14,10 +14,12 @@ import lombok.Setter;
 public class Household {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long apartmentNumber;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Property property;
-    private double squareMeters;
+    private int squareMeters;
     private int floorNumber;
 
 }

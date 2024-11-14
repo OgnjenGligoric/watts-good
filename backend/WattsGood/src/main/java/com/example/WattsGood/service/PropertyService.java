@@ -1,5 +1,6 @@
 package com.example.WattsGood.service;
 
+import com.example.WattsGood.model.Household;
 import com.example.WattsGood.model.Property;
 import com.example.WattsGood.repository.IPropertyRepository;
 import com.example.WattsGood.service.interfaces.IPropertyService;
@@ -17,6 +18,11 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public Property createProperty(Property property) {
+
+        for (Household household : property.getHouseholds()) {
+            household.setProperty(property);
+        }
+        property.setOwner(null);
         return propertyRepository.save(property);
     }
 

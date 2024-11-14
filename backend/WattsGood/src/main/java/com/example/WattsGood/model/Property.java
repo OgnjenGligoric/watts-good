@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -29,7 +31,7 @@ public class Property {
     private List<Household> households;
     private int numberOfFloors;
     private PropertyRequest requestStatus;
-    private Long submissionDate;
-    private Long completionDate;
+    private LocalDateTime submissionDate;
+    private LocalDateTime completionDate;
 
 }

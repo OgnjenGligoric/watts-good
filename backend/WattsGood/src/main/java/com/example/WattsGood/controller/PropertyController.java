@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/properties")
 public class PropertyController {
 
@@ -27,10 +26,10 @@ public class PropertyController {
     private ICityService cityService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Property> createProperty(@RequestBody Property property) {
+    public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property) {
         try {
             Property createdProperty = propertyService.createProperty(property);
-            return new ResponseEntity<>(createdProperty,HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

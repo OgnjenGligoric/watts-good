@@ -24,7 +24,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>City</label>
-                    <select class="nice-select form-control">
+                    <select class="nice-select form-control" formControlName="city">
                       <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
                     </select>
                   </div>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-12">
                   <div class="form-group login-btn">
-                    <button class="btn" type="submit" >Create property</button>
+                    <button class="btn" type="submit" (click)="onSubmitProperty()">Create property</button>
                   </div>
                 </div>
 
@@ -90,7 +90,7 @@
                 <div class="col-lg-3">
                   <div class="form-group">
                     <mat-label>Squared meters</mat-label>
-                    <input type="number" formControlName="squaredMeters">
+                    <input type="number" formControlName="squareMeters">
                   </div>
                 </div>
                 <div class="col-lg-3">
@@ -108,7 +108,7 @@
         <app-household-card
           [floorNumber]="household.floorNumber"
           [apartmentNumber]="household.apartmentNumber"
-          [squaredMeters]="household.squaredMeters"
+          [squaredMeters]="household.squareMeters"
           (remove)="removeHouseholdCard(i)">
         </app-household-card>
       </div>
