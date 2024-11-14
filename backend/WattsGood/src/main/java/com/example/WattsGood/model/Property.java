@@ -1,6 +1,7 @@
 package com.example.WattsGood.model;
 
 import com.example.WattsGood.util.PropertyRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,8 @@ public class Property {
     private Location location;
     @ManyToOne(fetch = FetchType.EAGER)
     private City city;
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Household> households;
     private int numberOfFloors;
     private PropertyRequest requestStatus;

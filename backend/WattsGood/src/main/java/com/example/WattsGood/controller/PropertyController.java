@@ -3,6 +3,7 @@ import com.example.WattsGood.model.Property;
 import com.example.WattsGood.service.interfaces.ICityService;
 import com.example.WattsGood.service.interfaces.IHouseholdService;
 import com.example.WattsGood.service.interfaces.IPropertyService;
+import com.example.WattsGood.util.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,9 +23,6 @@ public class PropertyController {
     @Autowired
     private IHouseholdService householdService;
 
-    @Autowired
-    private ICityService cityService;
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property) {
         try {
@@ -42,6 +40,16 @@ public class PropertyController {
             return new ResponseEntity<>(properties, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Property>> getPropertiesWithPendingRequest() {
+        try {
+            List<Property> properties = propertyService.findByRequestStatus(PropertyRequest.Pending);
+            return new ResponseEntity<>(properties, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

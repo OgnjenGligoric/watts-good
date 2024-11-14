@@ -5,6 +5,25 @@
   margin-top: 50px;
 }
 
+.button-req{
+  display: inline-block;
+  margin-right: 10px;
+  color: #fff;
+  line-height: 20px;
+  width: 45%;
+  background: #1A76D1;
+  border: none;
+}
+
+.button-req-decline{
+  display: inline-block;
+  color: #fff;
+  line-height: 20px;
+  width: 45%;
+  background: red;
+  border: none;
+}
+
 table {
   width: 100%;
 }

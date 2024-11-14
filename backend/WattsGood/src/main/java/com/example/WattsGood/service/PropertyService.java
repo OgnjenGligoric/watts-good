@@ -4,6 +4,7 @@ import com.example.WattsGood.model.Household;
 import com.example.WattsGood.model.Property;
 import com.example.WattsGood.repository.IPropertyRepository;
 import com.example.WattsGood.service.interfaces.IPropertyService;
+import com.example.WattsGood.util.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,11 @@ public class PropertyService implements IPropertyService {
     @Override
     public Optional<Property> getById(Long id) {
         return propertyRepository.findById(String.valueOf(id));
+    }
+
+    @Override
+    public List<Property> findByRequestStatus(PropertyRequest status) {
+        return propertyRepository.findByRequestStatus(status);
     }
 
 
