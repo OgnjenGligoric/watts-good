@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -40,7 +40,7 @@ import {MatButton} from "@angular/material/button";
   templateUrl: './property-request-admin.component.html',
   styleUrl: '../property-registration/property-registration.component.css'
 })
-export class PropertyRequestAdminComponent implements OnInit{
+export class PropertyRequestAdminComponent implements AfterViewInit{
 
   constructor(private propertyService: PropertyService) {
   }
@@ -50,19 +50,21 @@ export class PropertyRequestAdminComponent implements OnInit{
   @ViewChild(MatPaginator) paginator: any;
   properties: Property[] = [];
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
 
   ngOnInit(){
     this.propertyService.getPendingPropertyRequests().subscribe(
       (data: Property[]) => {
         this.properties = data;
         this.dataSource.data = data;
-        console.log(data);
       },
       error => {
         console.error('Error fetching properties:', error);
       }
     );
-
   }
 
   formatDate(date: Date): string {
