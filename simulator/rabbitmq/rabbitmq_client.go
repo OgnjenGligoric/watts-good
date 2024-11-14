@@ -23,17 +23,18 @@ func NewRabbitMQClient(url string) (*RabbitMQClient, error) {
     return &RabbitMQClient{connection: conn, channel: ch}, nil
 }
 
-func (c *RabbitMQClient) PublishMessage(routingKey, message string) error {
-    return c.channel.Publish(
+func (c *RabbitMQClient) PublishMessage(routingKey string, message []byte) error {
+    err := c.channel.Publish(
         "",          // exchange
         routingKey,  // routing key
         false,       // mandatory
         false,       // immediate
         amqp.Publishing{
-            ContentType: "text/plain",
-            Body:        []byte(message),
+            ContentType: "application/json",
+            Body:        message,
         },
     )
+    return err
 }
 
 func (c *RabbitMQClient) Close() {
@@ -45,4 +46,9 @@ type ConsumptionData struct {
     HouseholdID string  `json:"household_id"`
     Consumption float64 `json:"consumption"`
     Timestamp   int64   `json:"timestamp"`
+}
+
+type HeartbeatData struct {
+    HouseholdID string `json:"household_id"`
+    Timestamp   int64  `json:"timestamp"`
 }

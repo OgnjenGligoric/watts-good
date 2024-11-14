@@ -1,23 +1,35 @@
 package rtu
 
 import (
-    "fmt"
+    "encoding/json"
     "log"
     "time"
     "simulator/rabbitmq"
 )
 
-const heartbeatInterval = 30 * time.Second
+const heartbeatInterval = 1 * time.Second
 
 func StartHeartbeats(householdID string, client *rabbitmq.RabbitMQClient) {
     ticker := time.NewTicker(heartbeatInterval)
     defer ticker.Stop()
 
     for range ticker.C {
-        message := fmt.Sprintf("Simulator %s online", householdID)
-        if err := client.PublishMessage("heartbeat", message); err != nil {
+        data := rabbitmq.HeartbeatData{
+            HouseholdID: householdID,
+            Timestamp:   time.Now().Unix(),
+        }
+
+        // Serialize the HeartbeatData to JSON
+        messageBody, err := json.Marshal(data)
+        if err != nil {
+            log.Printf("Failed to marshal heartbeat data to JSON: %v", err)
+            continue
+        }
+
+        // Publish JSON message to the "heartbeat" topic
+        if err := client.PublishMessage("heartbeat", messageBody); err != nil {
             log.Printf("Failed to send heartbeat: %v", err)
         }
-        log.Printf("Heartbeat sent: %s", message)
+        log.Printf("Heartbeat sent: %s", string(messageBody))
     }
 }

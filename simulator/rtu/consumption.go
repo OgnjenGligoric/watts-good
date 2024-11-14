@@ -1,15 +1,14 @@
-package main
+package rtu
 
 import (
     "encoding/json"
-    "fmt"
     "log"
     "math/rand"
     "time"
     "simulator/rabbitmq"
 )
 
-const consumptionInterval = 1 * time.Minute
+const consumptionInterval = 2 * time.Second
 
 func StartConsumptionData(householdID string, client *rabbitmq.RabbitMQClient) {
     ticker := time.NewTicker(consumptionInterval)
@@ -20,7 +19,7 @@ func StartConsumptionData(householdID string, client *rabbitmq.RabbitMQClient) {
 
     for range ticker.C {
         consumption := generateConsumption(initialTime)
-        data := ConsumptionData{
+        data := rabbitmq.ConsumptionData{
             HouseholdID: householdID,
             Consumption: consumption,
             Timestamp:   initialTime.Unix(),
@@ -33,10 +32,8 @@ func StartConsumptionData(householdID string, client *rabbitmq.RabbitMQClient) {
             continue
         }
 
-        routingKey := fmt.Sprintf("household.%s.consumption", householdID)
-
         // Publish JSON message
-        if err := client.PublishMessage(routingKey, messageBody); err != nil {
+        if err := client.PublishMessage("consumption", messageBody); err != nil {
             log.Printf("Failed to send consumption data: %v", err)
         }
         log.Printf("Consumption data sent: %s", string(messageBody))

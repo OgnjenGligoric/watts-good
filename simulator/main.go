@@ -2,13 +2,13 @@ package main
 
 import (
     "log"
-    "simulator/influxdb"
+    // "simulator/influxdb"
     "simulator/rabbitmq"
     "simulator/rtu"
 )
 
 func main() {
-    _ = influxdb.NewInfluxClient()
+    // _ = influxdb.NewInfluxClient()
     householdID := "household_1" // Get from command-line args
 
     rabbitClient, err := rabbitmq.NewRabbitMQClient("amqp://admin:admin@localhost:5672/")
