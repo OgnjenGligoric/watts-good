@@ -40,3 +40,9 @@ func (c *RabbitMQClient) Close() {
     c.channel.Close()
     c.connection.Close()
 }
+
+type ConsumptionData struct {
+    HouseholdID string  `json:"household_id"`
+    Consumption float64 `json:"consumption"`
+    Timestamp   int64   `json:"timestamp"`
+}

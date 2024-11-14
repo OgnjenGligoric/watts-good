@@ -1,6 +1,7 @@
-package rtu
+package main
 
 import (
+    "encoding/json"
     "fmt"
     "log"
     "math/rand"
@@ -14,20 +15,39 @@ func StartConsumptionData(householdID string, client *rabbitmq.RabbitMQClient) {
     ticker := time.NewTicker(consumptionInterval)
     defer ticker.Stop()
 
+    // Set initial time to the time when the simulator starts
+    initialTime := time.Now()
+
     for range ticker.C {
-        consumption := generateConsumption()
-        message := fmt.Sprintf("Household %s consumption: %.2f W", householdID, consumption)
+        consumption := generateConsumption(initialTime)
+        data := ConsumptionData{
+            HouseholdID: householdID,
+            Consumption: consumption,
+            Timestamp:   initialTime.Unix(),
+        }
+
+        // Serialize to JSON
+        messageBody, err := json.Marshal(data)
+        if err != nil {
+            log.Printf("Failed to marshal data to JSON: %v", err)
+            continue
+        }
+
         routingKey := fmt.Sprintf("household.%s.consumption", householdID)
 
-        if err := client.PublishMessage(routingKey, message); err != nil {
+        // Publish JSON message
+        if err := client.PublishMessage(routingKey, messageBody); err != nil {
             log.Printf("Failed to send consumption data: %v", err)
         }
-        log.Printf("Consumption data sent: %s", message)
+        log.Printf("Consumption data sent: %s", string(messageBody))
+
+        // Increment the simulated time by one hour (for each minute that passes in real time)
+        initialTime = initialTime.Add(time.Hour)
     }
 }
 
-func generateConsumption() float64 {
-    currentHour := time.Now().Minute() % 24
+func generateConsumption(currentTime time.Time) float64 {
+    currentHour := currentTime.Hour()
     if currentHour >= 6 && currentHour <= 22 {
         return rand.Float64()*(800-500) + 500 // Daytime: higher usage
     }
