@@ -5,6 +5,8 @@ import {FooterComponent} from "./layout/footer/footer.component";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import "leaflet/dist/images/marker-shadow.png"
+
 @Component({
   selector: 'app-root',
   standalone: true,

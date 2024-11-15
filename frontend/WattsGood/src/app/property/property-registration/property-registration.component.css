@@ -5,8 +5,27 @@
   margin-top: 50px;
 }
 
-.contact-us section{
-  height: 500px;
+.button-req{
+  display: inline-block;
+  margin-right: 10px;
+  color: #fff;
+  line-height: 20px;
+  width: 45%;
+  background: #1A76D1;
+  border: none;
+}
+
+.button-req-decline{
+  display: inline-block;
+  color: #fff;
+  line-height: 20px;
+  width: 45%;
+  background: red;
+  border: none;
+}
+
+table {
+  width: 100%;
 }
 
 .contact-us .contact-us-left {
@@ -24,7 +43,7 @@
   color: #333;
   font-weight: 600;
   line-height: 27px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 12px;
   padding-bottom: 20px;
   text-align: left;
@@ -468,3 +487,85 @@
   background:#1A76D1;
   border-color:transparent;
 }
+
+
+
+
+
+.household-popup {
+  width: 500px;
+}
+
+.mat-dialog-container {
+  z-index: 1000;
+}
+
+.household-popup .popup-inner {
+  box-shadow: 0px 0px 10px #00000024;
+  border-radius: 5px;
+}
+
+.household-popup .household-form {
+  padding: 50px 40px;
+}
+
+.household-popup .household-form h2 {
+  font-size: 32px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+.household-popup .household-form h2:before {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 50px;
+  background: #1A76D1;
+  margin-bottom: 10px;
+}
+
+.household-popup .household-form p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.household-popup .form .form-group {
+  margin-bottom: 22px;
+}
+
+.household-popup .form .form-group input {
+  width: 100%;
+  border: 1px solid #eee;
+  padding: 0 18px;
+  color: #555;
+  font-size: 14px;
+  border-radius: 4px;
+  height: 50px;
+}
+
+.household-popup .form .form-group.submit-btn {
+  margin: 0;
+}
+
+.household-popup .form .btn {
+  color: #fff;
+  width: 100%;
+  background: #1A76D1;
+  border: none;
+  height: 50px;
+}
+
+.household-popup .form .btn:hover {
+  background: #1A76D1;
+}
+
+
+
+
+
+
+

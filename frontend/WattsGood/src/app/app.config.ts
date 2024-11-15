@@ -2,7 +2,7 @@ import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } fr
 import { provideRouter } from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
-
+import {provideAnimations} from "@angular/platform-browser/animations";
 import { routes } from './app.routes';
 import { MatDialogModule } from '@angular/material/dialog';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -17,6 +17,7 @@ export const appConfig: ApplicationConfig = {
       authInterceptor
     ])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    importProvidersFrom(BrowserAnimationsModule, MatDialogModule)
+    importProvidersFrom(BrowserAnimationsModule, MatDialogModule),
+    provideAnimations()
   ]
 };

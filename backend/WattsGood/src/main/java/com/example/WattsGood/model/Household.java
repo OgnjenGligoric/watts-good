@@ -1,5 +1,6 @@
 package com.example.WattsGood.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,10 +15,15 @@ import lombok.Setter;
 public class Household {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long apartmentNumber;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Property property;
-    private double squareMeters;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User owner;
+    private int squareMeters;
     private int floorNumber;
 
 }
