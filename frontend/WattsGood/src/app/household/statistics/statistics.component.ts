@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from '../../service/consumption-web-socket.service';
 import { Message } from '@stomp/stompjs';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [],
+  imports: [NgFor],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.css'], // Corrected typo here
   providers: [SocketService], // Add SocketService here, not StompRService
