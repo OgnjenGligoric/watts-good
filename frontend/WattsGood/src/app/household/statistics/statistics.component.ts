@@ -43,8 +43,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   }
   handleResult(message: { body: string; }) {
     if (message.body) {
-      // JSON.parse(message.body);
-      this.notifications.push(message.body);
+      let notifications = JSON.parse(message.body);
+      this.notifications.push(notifications);
     }
   }
   openGlobalSocket() {
