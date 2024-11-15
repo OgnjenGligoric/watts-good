@@ -1,8 +1,12 @@
 package com.example.WattsGood.model;
 
-public class HeartbeatData {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class HeartbeatMessage {
+
+    @JsonProperty("household_id")
     private String householdId;
+    @JsonProperty("timestamp")
     private long timestamp;
 
     // Getters and Setters
