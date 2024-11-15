@@ -18,12 +18,22 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue consumptionQueue() {
+        return new Queue("consumption", true);
+    }
+
+    @Bean
     public TopicExchange exchange() {
-        return new TopicExchange("topic-exchange");
+        return new TopicExchange("");
     }
 
     @Bean
     public Binding binding(Queue heartbeatQueue, TopicExchange exchange) {
         return BindingBuilder.bind(heartbeatQueue).to(exchange).with("heartbeat");
+    }
+
+    @Bean
+    public Binding consumptionBinding(Queue consumptionQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(consumptionQueue).to(exchange).with("consumption");
     }
 }
