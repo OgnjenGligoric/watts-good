@@ -20,6 +20,7 @@ import {Property} from "../../model/Property";
 import {Location} from "../../model/Location";
 import {PropertyRequest} from "../../model/PropertyRequest";
 import {PropertyService} from "../../service/property.service";
+import {PopupComponent} from "../../layout/popup/popup.component";
 
 
 
@@ -119,17 +120,15 @@ export class PropertyRegistrationComponent{
 
       this.propertyService.createProperty(property).subscribe(
         (response) => {
-          alert('Property created successfully');
-          window.location.reload();
+          this.showPopup('Successfully created property','')
+          this.households = [];
+          this.propertyRegistrationForm.reset();
         }
       );
     }else{
-      alert("Invalid property form")
+      this.showPopup('Invalid property form','Please fill out the form correctly')
     }
   }
-
-
-
 
 
   updateCoordinates(event: { lat: number, lng: number, address: string }): void {
@@ -181,6 +180,17 @@ export class PropertyRegistrationComponent{
 
   removeHouseholdCard(index: number): void {
     this.households.splice(index, 1);
+  }
+
+  private showPopup(tittle:string, message:string){
+    this.dialog.open(PopupComponent, {
+      width: '300px',
+      disableClose: true,
+      data: {
+        title: tittle,
+        message: message
+      }
+    });
   }
 
 }

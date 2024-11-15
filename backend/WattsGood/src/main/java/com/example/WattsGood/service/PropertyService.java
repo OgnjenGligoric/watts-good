@@ -2,11 +2,15 @@ package com.example.WattsGood.service;
 
 import com.example.WattsGood.model.Household;
 import com.example.WattsGood.model.Property;
+import com.example.WattsGood.model.User;
 import com.example.WattsGood.repository.IPropertyRepository;
 import com.example.WattsGood.repository.IUserRepository;
+import com.example.WattsGood.service.interfaces.IAuthenticationService;
 import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +32,9 @@ public class PropertyService implements IPropertyService {
             household.setProperty(property);
             household.setOwner(null);
         }
-        // Staviti ownera da je ulogovan korisnik
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        property.setOwner((User) authentication.getPrincipal());
+
         return propertyRepository.save(property);
     }
 

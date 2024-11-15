@@ -23,8 +23,6 @@ public class PropertyController {
     @Autowired
     private IHouseholdService householdService;
 
-
-    // STAVITI DA NADJE OWNERA PO ULOGOVANOM KORISNIKU PA DA GA STAVI KAO OWNERA PROPERTIJA
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property) {
         try {
