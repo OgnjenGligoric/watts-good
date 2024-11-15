@@ -25,8 +25,7 @@ public class ConsumptionConsumer {
         try {
             ConsumptionMessage consumptionMessage = objectMapper.readValue(message, ConsumptionMessage.class);
             logger.info("Received Consumption: {}", consumptionMessage); // Log the heartbeat data
-            messagingTemplate.convertAndSend("/topic/notifications", consumptionMessage); // Broadcasting the message to clients
-
+            messagingTemplate.convertAndSend("/socket-publisher", consumptionMessage); // Broadcasting the message to clients
         } catch (Exception e) {
             logger.error("Error processing message: {}", e.getMessage()); // Log errors
         }
