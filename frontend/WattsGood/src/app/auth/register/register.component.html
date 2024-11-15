@@ -1,0 +1,106 @@
+<section class="contact-us section">
+  <div class="container custom-width" id="propertyContainer">
+    <div class="inner">
+      <div class="contact-us-form">
+        <h2>Register</h2>
+        <!-- Form -->
+        <form class="form" [formGroup]="registerForm">
+          <div class="row">
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email" id="Email" formControlName="email" required="true">
+                <div *ngIf="email?.touched && email?.invalid" class="error-text">{{ emailErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" formControlName="password" required="true">
+                <div *ngIf="password?.touched && password?.invalid" class="error-text">{{ passwordErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="RePassword">Repeat Your Password</label>
+                <input type="password" id="RePassword" formControlName="rePassword" required="true">
+                <div *ngIf="rePassword?.touched && rePassword?.invalid || !passwordsMatch" class="error-text">{{ rePasswordErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" formControlName="name" required="true">
+                <div *ngIf="name?.touched && name?.invalid" class="error-text">{{ nameErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Surname">Surname</label>
+                <input type="text" id="Surname" formControlName="surname" required="true">
+                <div *ngIf="surname?.touched && surname?.invalid" class="error-text">{{ surnameErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Country">Country</label>
+                <input type="text" id="Country" formControlName="country" required="true">
+                <div *ngIf="country?.touched && country?.invalid" class="error-text">{{ countryErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="City">City</label>
+                <input type="text" id="City" formControlName="city" required="true">
+                <div *ngIf="city?.touched && city?.invalid" class="error-text">{{ cityErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Street">Street</label>
+                <input type="text" id="Street" formControlName="street" required="true">
+                <div *ngIf="street?.touched && street?.invalid" class="error-text">{{ streetErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Phone">Phone</label>
+                <input type="tel" id="Phone" formControlName="phone" required="true">
+                <div *ngIf="phone?.touched && phone?.invalid" class="error-text">{{ phoneErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row-lg-3">
+              <div class="form-group">
+                <label for="Image">Upload Profile Picture</label>
+                <input (change)="chosenImageChanged($event)" id="Image" class="form-control" formControlName="image" type="file" accept="image/*">
+                <div *ngIf="imageError" class="error-text">Please upload a profile picture.</div>
+              </div>
+            </div>
+
+            <div class="row buttons">
+              <div class="col-lg-4 col-md-5 col-sm-4">
+                <button class="btn d-flex align-items-center" type="submit" (click)="onSubmit()" [disabled]="loading">
+                  <div class="flex-grow-1">Register</div>
+                  <div *ngIf="loading" class="spinner ml-2"></div>
+                </button>
+              </div>
+
+              <div class="col-lg-4 col-md-5 col-sm-4">
+                <button class="btn" routerLink="/sign-in">Sign in</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

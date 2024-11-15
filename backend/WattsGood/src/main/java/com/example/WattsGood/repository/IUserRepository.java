@@ -3,6 +3,7 @@ package com.example.WattsGood.repository;
 import com.example.WattsGood.model.User;
 import com.example.WattsGood.util.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,4 +16,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.role = :role")
     List<User> findByRole(@Param("role") UserRole role);
+
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.email = :email")
+    void deleteByEmail(@Param("email") String email);
 }

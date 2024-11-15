@@ -6,6 +6,7 @@ import com.example.WattsGood.service.interfaces.IUserService;
 import com.example.WattsGood.util.PasswordGenerator;
 import com.example.WattsGood.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ import java.io.IOException;
 public class UserService implements IUserService {
 
     private static final int PASSWORD_LENGTH = 12;
+
+    @Value("${upload.dir}/superAdminPassword.txt")
+    private String ADMIN_PATH;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -62,10 +66,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User createSuperAdmin() {
+    public void createSuperAdmin() {
         if (this.getByRole(UserRole.SuperAdmin).isEmpty()) {
             String password = passwordGenerator.generateRandomPassword(PASSWORD_LENGTH);
-            String path = "./WattsGood/src/main/java/com/example/WattsGood/uploads/superAdminPassword.txt";
             User superAdmin = new User();
             superAdmin.setEmail("admin");
             superAdmin.setPassword(password);
@@ -80,25 +83,43 @@ public class UserService implements IUserService {
             superAdmin.setActive(false);
             superAdmin = this.createUser(superAdmin);
 
-            File file = new File(path);
+            SuperAdminPasswordToFile(password);
 
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-
-                FileWriter writer = new FileWriter(file);
-                writer.write(password);
-                writer.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return superAdmin;
+            return;
         }
 
-        return this.getByRole(UserRole.SuperAdmin).get(0);
+        this.getByRole(UserRole.SuperAdmin);
+    }
+
+    @Override
+    public User changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        if(user.getRole() == UserRole.SuperAdmin){
+            SuperAdminPasswordToFile(password);
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        userRepository.deleteByEmail(email);
+    }
+
+    private void SuperAdminPasswordToFile(String password) {
+        File file = new File(ADMIN_PATH);
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(password);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

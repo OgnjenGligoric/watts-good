@@ -99,7 +99,14 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>6.1.5</version>
 		</dependency>
-		<!--  -->
+		<!-- JavaMail API -->
+		<dependency>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
+		<!-- Other dependencies... -->
 
     </dependencies>
 
