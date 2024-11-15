@@ -32,8 +32,6 @@ export class AppComponent {
     });
   }
   checkNavbarVisibility(){
-    this.show = (['sign-in', 'activate-super-admin', 'register'].includes(this.router.url) || this.router.url == '/');
-    console.log(this.show );
-    console.log(this.router.url);
+    this.show = !(['/sign-in', '/activate-super-admin', '/register'].includes(this.router.url) || this.router.url.includes('/activate/'));
   }
 }
