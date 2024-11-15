@@ -23,11 +23,33 @@ public class PropertyController {
     @Autowired
     private IHouseholdService householdService;
 
+
+    // STAVITI DA NADJE OWNERA PO ULOGOVANOM KORISNIKU PA DA GA STAVI KAO OWNERA PROPERTIJA
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property) {
         try {
             Property createdProperty = propertyService.createProperty(property);
             return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/{id}/accept",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Property> acceptPropertyRequest(@PathVariable Long id) {
+        try {
+            Property createdProperty = propertyService.updatePropertyRequest(id,PropertyRequest.Accepted);
+            return new ResponseEntity<>(createdProperty,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}/decline")
+    public ResponseEntity<Property> declinePropertyRequest(@PathVariable Long id) {
+        try {
+            Property createdProperty = propertyService.updatePropertyRequest(id,PropertyRequest.Declined);
+            return new ResponseEntity<>(createdProperty,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -47,6 +69,16 @@ public class PropertyController {
     public ResponseEntity<List<Property>> getPropertiesWithPendingRequest() {
         try {
             List<Property> properties = propertyService.findByRequestStatus(PropertyRequest.Pending);
+            return new ResponseEntity<>(properties, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/owner/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Property>> getPropertiesByOwnerId(@PathVariable Long id) {
+        try {
+            List<Property> properties = propertyService.findByOwner(id);
             return new ResponseEntity<>(properties, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

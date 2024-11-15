@@ -3,6 +3,7 @@ package com.example.WattsGood.service;
 import com.example.WattsGood.model.Household;
 import com.example.WattsGood.model.Property;
 import com.example.WattsGood.repository.IPropertyRepository;
+import com.example.WattsGood.repository.IUserRepository;
 import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,17 @@ public class PropertyService implements IPropertyService {
     @Autowired
     private IPropertyRepository propertyRepository;
 
+    @Autowired
+    IUserRepository userRepository;
+
     @Override
     public Property createProperty(Property property) {
 
         for (Household household : property.getHouseholds()) {
             household.setProperty(property);
+            household.setOwner(null);
         }
-        property.setOwner(null);
+        // Staviti ownera da je ulogovan korisnik
         return propertyRepository.save(property);
     }
 
@@ -42,5 +47,16 @@ public class PropertyService implements IPropertyService {
         return propertyRepository.findByRequestStatus(status);
     }
 
+    @Override
+    public Property updatePropertyRequest(Long id, PropertyRequest requestStatus) {
+        Property property = propertyRepository.findById(String.valueOf(id)).get();
+        property.setRequestStatus(requestStatus);
+        return propertyRepository.save(property);
+    }
+
+    @Override
+    public List<Property> findByOwner(Long ownerId) {
+        return propertyRepository.findAllByOwnerId(ownerId);
+    }
 
 }

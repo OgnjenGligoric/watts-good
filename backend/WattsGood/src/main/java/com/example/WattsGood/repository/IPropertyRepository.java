@@ -9,4 +9,5 @@ import java.util.List;
 public interface IPropertyRepository extends JpaRepository<Property, String> {
 
     List<Property> findByRequestStatus(PropertyRequest status);
+    List<Property> findAllByOwnerId(Long ownerId);
 }

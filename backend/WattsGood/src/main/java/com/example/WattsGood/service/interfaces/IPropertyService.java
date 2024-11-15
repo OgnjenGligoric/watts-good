@@ -12,6 +12,7 @@ public interface IPropertyService {
     List<Property> getAllProperties();
     Optional<Property> getById(Long id);
     List<Property> findByRequestStatus(PropertyRequest status);
-
+    Property updatePropertyRequest(Long id,PropertyRequest requestStatus);
+    List<Property> findByOwner(Long ownerId);
 
 }

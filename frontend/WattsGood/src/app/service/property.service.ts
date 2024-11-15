@@ -18,9 +18,20 @@ export class PropertyService {
   getAllPropertyRequests(): Observable<Property[]> {
     return this.httpClient.get<Property[]>(environment.apiHost + 'properties');
   }
+  getAllPropertyRequestsByOwner(id:number): Observable<Property[]> {
+    return this.httpClient.get<Property[]>(environment.apiHost + `properties/owner/${id}`);
+  }
 
   getPendingPropertyRequests(): Observable<Property[]> {
     return this.httpClient.get<Property[]>(environment.apiHost + 'properties/pending');
+  }
+
+  acceptPropertyRequest(id: number): Observable<Property> {
+    return this.httpClient.put<Property>(environment.apiHost + `properties/${id}/accept`, {});
+  }
+
+  declinePropertyRequest(id: number): Observable<Property> {
+    return this.httpClient.put<Property>(environment.apiHost + `properties/${id}/decline`, {});
   }
 
 }
