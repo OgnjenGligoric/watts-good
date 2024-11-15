@@ -24,7 +24,7 @@
   border: none;
   font-size: 14px;
   color: #fff;
-  background: #333;
+  background: #1A76D1;
   -webkit-transition: all 0.4s ease;
   -moz-transition: all 0.4s ease;
   transition: all 0.4s ease;
@@ -32,6 +32,6 @@
 }
 
 .modal-content button:hover {
-  background:#1A76D1;
+  background:#333;
   color:#fff;
 }

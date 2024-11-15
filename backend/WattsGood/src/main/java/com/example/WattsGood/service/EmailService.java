@@ -46,7 +46,8 @@ public class EmailService {
                 "        .header h1 { font-size: 24px; color: #1A76D1; }\n" +
                 "        .content { padding: 20px; line-height: 1.6; }\n" +
                 "        .button-container { text-align: center; margin-top: 20px; }\n" +
-                "        .button { padding: 12px 24px; background-color: #1A76D1; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; }\n" +
+                "        .button-container a { color: #fff; }\n" +
+                "        .button { padding: 12px 24px; background: #1A76D1; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; }\n" +
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +

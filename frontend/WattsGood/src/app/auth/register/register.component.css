@@ -6,6 +6,7 @@
   flex-wrap: wrap;
   width: 100%;
 }
+
 .contact-us .inner .row{
   gap: 5px;
   justify-content: center;
@@ -494,9 +495,9 @@
   }
 }
 
-@media (min-width: 900px) { /* Medium screens */
+@media (min-width: 800px) { /* Medium screens */
   .custom-width {
-    width: 50%;
+    width: 30%;
   }
 }
 

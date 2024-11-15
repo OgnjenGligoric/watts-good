@@ -2,7 +2,6 @@ import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('token');
-  console.log(token)
 
   let authReq = req;
   if (token) {
