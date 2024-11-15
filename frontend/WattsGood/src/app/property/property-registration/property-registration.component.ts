@@ -1,11 +1,27 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  ɵCoerceStrArrToNumArr, ɵFormGroupRawValue, ɵNavigate, ɵTypedOrUntyped
+} from "@angular/forms";
 import {Router} from "express";
 import {MapComponent} from "../../map/map.component";
 import {MatSelectModule} from "@angular/material/select";
 import {CityService} from "../../service/city.service";
 import {City} from "../../model/City";
 import {CommonModule} from "@angular/common";
+import {MatDialog} from "@angular/material/dialog";
+import {HouseholdCardComponent} from "../../household/household-card/household-card.component";
+import {Household} from "../../model/Household";
+import {Property} from "../../model/Property";
+import {Location} from "../../model/Location";
+import {PropertyRequest} from "../../model/PropertyRequest";
+import {PropertyService} from "../../service/property.service";
+
+
 
 @Component({
   selector: 'app-property-registration',
@@ -14,27 +30,38 @@ import {CommonModule} from "@angular/common";
     ReactiveFormsModule,
     MapComponent,
     MatSelectModule,
-    CommonModule
+    CommonModule,
+    HouseholdCardComponent
   ],
   templateUrl: './property-registration.component.html',
   styleUrl: './property-registration.component.css'
 })
 export class PropertyRegistrationComponent{
 
-  constructor(private cityService: CityService) {
+  constructor(private cityService: CityService, private propertyService: PropertyService,private dialog: MatDialog) {
   }
   cities: City[] = [];
-  latitude: number | null = null;
-  longitude: number | null = null;
+  latitude: number = 0;
+  longitude: number = 0;
   uploadedPictures: File[] = [];
+  uploadedPdfs: File[] = [];
+  households: Household[] = [];
 
-  propertyRegistrationForm = new FormGroup({
-    address: new FormControl('', ),
-    floorNumber: new FormControl('', ),
-    location: new FormControl(''),
-    images: new FormControl(''),
-    pdf: new FormControl(''),
+  propertyRegistrationForm = new FormGroup<any>({
+    address: new FormControl("",[Validators.required]),
+    floorNumber: new FormControl(0,[Validators.required] ),
+    location: new FormControl('',[Validators.required]),
+    city: new FormControl('',[Validators.required]),
+    // images: new FormControl('',[Validators.required]),
+    // pdf: new FormControl('',[Validators.required]),
   });
+
+  householdForm = new FormGroup({
+    floorNumber: new FormControl(0, [Validators.required]),
+    apartmentNumber: new FormControl(0, [Validators.required]),
+    squareMeters: new FormControl(0, [Validators.required])
+  });
+
 
   ngOnInit(){
     this.loadCities();
@@ -51,6 +78,60 @@ export class PropertyRegistrationComponent{
     );
   }
 
+  addHouseholdCard(): void {
+    const household: Household = {
+      floorNumber: this.householdForm.get('floorNumber')?.value!,
+      apartmentNumber: this.householdForm.get('apartmentNumber')?.value!,
+      squareMeters: this.householdForm.get('squareMeters')?.value!
+    };
+
+    if (
+      this.householdForm.valid &&
+      this.isUniqueApartmentNumber(household.apartmentNumber) &&
+      this.isValidSquaredMeters(household.squareMeters) &&
+      this.isValidFloorNumber(household.floorNumber)
+    ) {
+      this.households.push(household);
+      this.householdForm.reset();
+    }else{
+      alert("Please insert valid values into household form! ")
+    }
+  }
+
+  onSubmitProperty() {
+    if (this.propertyRegistrationForm.valid) {
+      const propertyLocation: Location = {
+        latitude: this.latitude,
+        longitude: this.longitude
+      };
+
+      const property: Property = {
+        owner: null,
+        address:  this.propertyRegistrationForm.get('address')?.value,
+        location: propertyLocation,
+        city: this.cities.find(city => city.id == this.propertyRegistrationForm.value.city)!,
+        households: this.households,
+        numberOfFloors: this.propertyRegistrationForm.value.floorNumber,
+        requestStatus: PropertyRequest.Pending,
+        submissionDate: new Date(),
+        completionDate: null,
+      };
+
+      this.propertyService.createProperty(property).subscribe(
+        (response) => {
+          alert('Property created successfully');
+          window.location.reload();
+        }
+      );
+    }else{
+      alert("Invalid property form")
+    }
+  }
+
+
+
+
+
   updateCoordinates(event: { lat: number, lng: number, address: string }): void {
     this.latitude = event.lat;
     this.longitude = event.lng;
@@ -60,22 +141,46 @@ export class PropertyRegistrationComponent{
     });
   }
 
-  choosenImageChanged($event: Event) {
+  imageChanged($event: Event) {
     const files: FileList | null = ($event.target as HTMLInputElement).files;
     if (files) {
       for (let i = 0; i < files.length; i++) {
         this.uploadedPictures.push(files[i]);
-        console.log(files[i]);
       }
     }
   }
 
-
-  onSubmit() {
-    if (this.propertyRegistrationForm.valid) {
-      console.log(this.propertyRegistrationForm.value);
-    } else {
-      console.log('Form is not valid');
+  pdfChanged($event: Event) {
+    const files: FileList | null = ($event.target as HTMLInputElement).files;
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        this.uploadedPdfs.push(files[i]);
+      }
     }
   }
+
+  private isUniqueApartmentNumber(apartmentNumber: number | null): boolean {
+    if (apartmentNumber !== null && this.households.some(h => h.apartmentNumber === apartmentNumber)) {
+      return false;
+    }
+    return true;
+  }
+
+  private isValidSquaredMeters(squaredMeters: number | null): boolean {
+    return !(squaredMeters === null || squaredMeters <= 0);
+
+  }
+
+  private isValidFloorNumber(floorNumber: number | null): boolean {
+    const maxFloors = this.propertyRegistrationForm.get('floorNumber')?.value;
+    const maxFloorsNumber = maxFloors ? parseInt(String(maxFloors), 10) : 1;
+
+    return !(floorNumber !== null && maxFloorsNumber !== undefined && floorNumber > maxFloorsNumber);
+
+  }
+
+  removeHouseholdCard(index: number): void {
+    this.households.splice(index, 1);
+  }
+
 }

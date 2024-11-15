@@ -1,7 +1,23 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as L from 'leaflet';
-import {icon} from "leaflet";
 import {HttpClient} from "@angular/common/http";
+import { icon, Marker } from 'leaflet';
+const iconRetinaUrl = 'assets/marker-icon-2x.png';
+const iconUrl = 'assets/marker-icon.png';
+const shadowUrl = 'assets/marker-shadow.png';
+const iconDefault = icon({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+});
+Marker.prototype.options.icon = iconDefault;
+
+
 
 @Component({
   selector: 'app-map',
@@ -52,7 +68,7 @@ export class MapComponent implements OnInit {
           const addr = response.address;
           if (addr) {
             const street = addr.road || addr.street || 'Unknown street';
-            const houseNumber = addr.house_number || 'N/A';
+            const houseNumber = addr.house_number || '';
             const address = `${street} ${houseNumber}`;
             this.coordinatesSelected.emit({ lat, lng, address });
           }

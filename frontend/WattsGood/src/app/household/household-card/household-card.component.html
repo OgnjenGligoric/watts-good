@@ -1,0 +1,36 @@
+<section class="contact-us section">
+  <div class="inner">
+    <div class="row">
+      <div class="contact-us-form">
+          <form class="form" [formGroup]="householdForm">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <mat-label>Floor number</mat-label>
+                  <input type="number" formControlName="floorNumber" readonly>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <mat-label>Apartment number</mat-label>
+                  <input type="number" formControlName="apartmentNumber" readonly>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <mat-label>Squared meters</mat-label>
+                  <input type="number" formControlName="squaredMeters" readonly>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group login-btn">
+                  <mat-label style="color: white">f</mat-label>
+                  <button class="btn" type="submit" (click)="onRemove()">Remove</button>
+                </div>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</section>
