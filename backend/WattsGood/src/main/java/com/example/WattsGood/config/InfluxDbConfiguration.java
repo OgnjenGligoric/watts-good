@@ -26,5 +26,4 @@ public class InfluxDbConfiguration {
         return InfluxDBClientFactory.create(this.url, this.token.toCharArray(),
                 this.organization, this.bucket);
     }
-    
 }
