@@ -4,11 +4,13 @@ import com.example.WattsGood.service.interfaces.ICityService;
 import com.example.WattsGood.service.interfaces.IHouseholdService;
 import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +25,17 @@ public class PropertyController {
     @Autowired
     private IHouseholdService householdService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HttpStatus> createProperty(
+            @RequestPart("property") Property property,
+            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam("pdfs") List<MultipartFile> pdfs
+    ) {
         try {
-            Property createdProperty = propertyService.createProperty(property);
+            propertyService.createPropertyWithFiles(property, images, pdfs);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

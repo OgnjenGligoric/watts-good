@@ -10,10 +10,17 @@ import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +36,14 @@ public class PropertyService implements IPropertyService {
     @Autowired
     EmailService emailService;
 
+    @Value("${property.images.dir}")
+    private String imageDirectory;
+
+    @Value("${property.pdfs.dir}")
+    private String pdfDirectory;
+
     @Override
-    public Property createProperty(Property property) {
+    public Property createPropertyWithFiles(Property property, List<MultipartFile> images, List<MultipartFile> pdfs) throws IOException {
 
         for (Household household : property.getHouseholds()) {
             household.setProperty(property);
@@ -39,7 +52,37 @@ public class PropertyService implements IPropertyService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         property.setOwner((User) authentication.getPrincipal());
 
-        return propertyRepository.save(property);
+        propertyRepository.save(property);
+
+        String propertyImageDir = imageDirectory + "/" + property.getId();
+        String propertyPdfDir = pdfDirectory + "/" + property.getId();
+
+        createDirectoryIfNotExists(propertyImageDir);
+        createDirectoryIfNotExists(propertyPdfDir);
+
+        for (MultipartFile image : images) {
+            saveFile(image, propertyImageDir);
+        }
+        for (MultipartFile pdf : pdfs) {
+            saveFile(pdf, propertyPdfDir);
+        }
+        return property;
+    }
+
+    private void saveFile(MultipartFile file, String directory) throws IOException {
+        Path path = Paths.get(directory + "/" + file.getOriginalFilename());
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void createDirectoryIfNotExists(String directory) {
+        Path path = Paths.get(directory);
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not create directory: " + directory, e);
+            }
+        }
     }
 
     @Override

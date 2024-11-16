@@ -12,8 +12,20 @@ export class PropertyService {
 
   constructor(private httpClient: HttpClient) { }
 
-  createProperty(property: Property): Observable<Property> {
-    return this.httpClient.post<Property>(environment.apiHost + 'properties', property);
+  createProperty(property: Property, images: File[], pdfs: File[]): Observable<Property> {
+    const formData = new FormData();
+
+    formData.append('property', new Blob([JSON.stringify(property)], { type: 'application/json' }));
+
+    images.forEach((image: File) => {
+      formData.append('images', image);
+    });
+
+    pdfs.forEach((pdf: File) => {
+      formData.append('pdfs', pdf);
+    });
+
+    return this.httpClient.post<Property>(environment.apiHost + 'properties', formData);
   }
   getAllPropertyRequests(): Observable<Property[]> {
     return this.httpClient.get<Property[]>(environment.apiHost + 'properties');

@@ -53,8 +53,8 @@ export class PropertyRegistrationComponent{
     floorNumber: new FormControl(0,[Validators.required] ),
     location: new FormControl('',[Validators.required]),
     city: new FormControl('',[Validators.required]),
-    // images: new FormControl('',[Validators.required]),
-    // pdf: new FormControl('',[Validators.required]),
+    images: new FormControl('',[Validators.required]),
+    pdf: new FormControl('',[Validators.required]),
   });
 
   householdForm = new FormGroup({
@@ -100,7 +100,10 @@ export class PropertyRegistrationComponent{
   }
 
   onSubmitProperty() {
-    if (this.propertyRegistrationForm.valid) {
+    if (this.propertyRegistrationForm.valid &&
+      this.uploadedPictures.length != 0 &&
+      this.uploadedPdfs.length != 0 &&
+      this.households.length != 0) {
       const propertyLocation: Location = {
         latitude: this.latitude,
         longitude: this.longitude
@@ -118,11 +121,10 @@ export class PropertyRegistrationComponent{
         completionDate: null,
       };
 
-      this.propertyService.createProperty(property).subscribe(
+      this.propertyService.createProperty(property,this.uploadedPictures,this.uploadedPdfs).subscribe(
         (response) => {
-          this.showPopup('Successfully created property','')
-          this.households = [];
-          this.propertyRegistrationForm.reset();
+          this.showPopup('Successfull','Successfully created property!')
+          this.clearForms();
         }
       );
     }else{
@@ -130,6 +132,12 @@ export class PropertyRegistrationComponent{
     }
   }
 
+  clearForms(){
+    this.households = [];
+    this.uploadedPdfs = [];
+    this.uploadedPictures =[];
+    this.propertyRegistrationForm.reset();
+  }
 
   updateCoordinates(event: { lat: number, lng: number, address: string }): void {
     this.latitude = event.lat;
