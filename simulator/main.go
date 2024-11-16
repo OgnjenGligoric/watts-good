@@ -5,11 +5,12 @@ import (
     // "simulator/influxdb"
     "simulator/rabbitmq"
     "simulator/rtu"
+    "os"
+    "fmt"
 )
 
 func main() {
-    // _ = influxdb.NewInfluxClient()
-    householdID := "household_1" // Get from command-line args
+    householdID := os.Args[1]
 
     rabbitClient, err := rabbitmq.NewRabbitMQClient("amqp://admin:admin@localhost:5672/")
     if err != nil {
