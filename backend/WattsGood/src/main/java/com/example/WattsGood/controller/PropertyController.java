@@ -36,7 +36,7 @@ public class PropertyController {
     @PutMapping(value = "/{id}/accept",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Property> acceptPropertyRequest(@PathVariable Long id) {
         try {
-            Property createdProperty = propertyService.updatePropertyRequest(id,PropertyRequest.Accepted);
+            Property createdProperty = propertyService.acceptPropertyRequest(id);
             return new ResponseEntity<>(createdProperty,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,9 +44,9 @@ public class PropertyController {
     }
 
     @PutMapping("/{id}/decline")
-    public ResponseEntity<Property> declinePropertyRequest(@PathVariable Long id) {
+    public ResponseEntity<Property> declinePropertyRequest(@PathVariable Long id, @RequestBody String reason) {
         try {
-            Property createdProperty = propertyService.updatePropertyRequest(id,PropertyRequest.Declined);
+            Property createdProperty = propertyService.declinePropertyRequest(id,reason);
             return new ResponseEntity<>(createdProperty,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

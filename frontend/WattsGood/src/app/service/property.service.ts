@@ -30,8 +30,8 @@ export class PropertyService {
     return this.httpClient.put<Property>(environment.apiHost + `properties/${id}/accept`, {});
   }
 
-  declinePropertyRequest(id: number): Observable<Property> {
-    return this.httpClient.put<Property>(environment.apiHost + `properties/${id}/decline`, {});
+  declinePropertyRequest(id: number,reason: string): Observable<Property> {
+    return this.httpClient.put<Property>(environment.apiHost + `properties/${id}/decline`, reason);
   }
 
 }
