@@ -6,10 +6,14 @@ import (
     "simulator/rabbitmq"
     "simulator/rtu"
     "os"
-    "fmt"
+    // "fmt"
 )
 
 func main() {
+
+    if len(os.Args) < 2{
+        log.Fatalf("You have to pass in household id.")
+    }
     householdID := os.Args[1]
 
     rabbitClient, err := rabbitmq.NewRabbitMQClient("amqp://admin:admin@localhost:5672/")
