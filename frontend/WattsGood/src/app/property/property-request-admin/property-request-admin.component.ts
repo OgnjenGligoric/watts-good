@@ -53,26 +53,30 @@ export class PropertyRequestAdminComponent implements AfterViewInit{
 
   displayedColumns: string[] =['id','address', 'city', 'submissionDate', 'floorNumber','requestStatus','actions'];
   dataSource: MatTableDataSource<Property> = new MatTableDataSource<Property>();
-  @ViewChild(MatPaginator) paginator: any;
   @ViewChild(MatSort, {static: true}) sort: MatSort | undefined;
   properties: Property[] = [];
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalItems!: number;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort!;
+    this.loadPropertyRequests(this.currentPage, this.pageSize);
   }
 
-
-  ngOnInit(): void {
-    this.loadPropertyRequests();
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPropertyRequests(this.currentPage, this.pageSize);
   }
 
-  loadPropertyRequests(): void {
-    this.propertyService.getPendingPropertyRequests().subscribe((data: Property[]) => {
-      this.dataSource.data = data;
+  loadPropertyRequests(page: number = 0, size: number = 5): void {
+    this.propertyService.getPendingPropertyRequests(page, size).subscribe(response => {
+      this.properties = response.content;
+      this.totalItems = response.totalElements;
+      this.dataSource.data = response.content;
     });
   }
-
   acceptRequest(id: number): void {
     this.propertyService.acceptPropertyRequest(id).subscribe(() => {
       this.showPopupSuccess('Successful',`Successfully accepted property request with id ${id}`)

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Property} from "../model/Property";
 import {Observable} from "rxjs";
 import {environment} from "../../env/env";
 import {City} from "../model/City";
+import {Page} from "./Page";
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,20 @@ export class PropertyService {
     return this.httpClient.get<Property[]>(environment.apiHost + `properties/owner/${id}`);
   }
 
-  getPendingPropertyRequests(): Observable<Property[]> {
-    return this.httpClient.get<Property[]>(environment.apiHost + 'properties/pending');
+  getPendingPropertyRequests(page: number, size: number): Observable<Page<Property>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    const url = environment.apiHost + 'properties/pending';
+    return this.httpClient.get<Page<Property>>(url, { params });
+  }
+
+  getPaginatedPropertiesByOwner(id: number, page: number, size: number): Observable<Page<Property>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    const url = environment.apiHost + `properties/owner/${id}/paginated`;
+    return this.httpClient.get<Page<Property>>(url, { params });
   }
 
   acceptPropertyRequest(id: number): Observable<Property> {

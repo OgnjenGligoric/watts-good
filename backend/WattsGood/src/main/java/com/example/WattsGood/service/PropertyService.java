@@ -11,16 +11,20 @@ import com.example.WattsGood.util.PropertyRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,14 +100,20 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public List<Property> findByRequestStatus(PropertyRequest status) {
-        return propertyRepository.findByRequestStatus(status);
+    public Page<Property> findByRequestStatus(PropertyRequest status, Pageable pageable) {
+        return propertyRepository.findAllByRequestStatus(status,pageable);
+    }
+
+    @Override
+    public Page<Property> findByOwnerPaginated(Long id, Pageable pageable) {
+        return propertyRepository.findAllByOwnerId(id,pageable);
     }
 
     @Override
     public Property acceptPropertyRequest(Long id) throws MessagingException {
         Property property = propertyRepository.findById(String.valueOf(id)).get();
         property.setRequestStatus(PropertyRequest.Accepted);
+        property.setCompletionDate(LocalDateTime.now());
         emailService.sendPropertyAcceptanceEmail(property.getOwner().getEmail());
         return propertyRepository.save(property);
     }
@@ -119,6 +129,7 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public List<Property> findByOwner(Long ownerId) {
+
         return propertyRepository.findAllByOwnerId(ownerId);
     }
 

@@ -6,12 +6,15 @@ import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,9 +74,11 @@ public class PropertyController {
     }
 
     @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Property>> getPropertiesWithPendingRequest() {
+    public ResponseEntity<Page<Property>> getPropertiesWithPendingRequest(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         try {
-            List<Property> properties = propertyService.findByRequestStatus(PropertyRequest.Pending);
+            Page<Property> properties = propertyService.findByRequestStatus(PropertyRequest.Pending, PageRequest.of(page, size));
             return new ResponseEntity<>(properties, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -84,6 +89,19 @@ public class PropertyController {
     public ResponseEntity<List<Property>> getPropertiesByOwnerId(@PathVariable Long id) {
         try {
             List<Property> properties = propertyService.findByOwner(id);
+            return new ResponseEntity<>(properties, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/owner/{id}/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<Property>> getPropertiesByOwnerIdPaginated(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        try {
+            Page<Property> properties = propertyService.findByOwnerPaginated(id, PageRequest.of(page, size));
             return new ResponseEntity<>(properties, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
