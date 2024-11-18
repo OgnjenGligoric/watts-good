@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HouseholdCardComponent} from "../../household/household-card/household-card.component";
 import {MapComponent} from "../../map/map.component";
 import {MatLabel} from "@angular/material/form-field";
@@ -49,7 +49,7 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-b
 })
 
 
-export class PropertyRequestUserComponent implements OnInit{
+export class PropertyRequestUserComponent implements AfterViewInit{
 
   constructor(private cityService: CityService,private propertyService: PropertyService,) {
   }
@@ -57,21 +57,30 @@ export class PropertyRequestUserComponent implements OnInit{
   displayedColumns: string[] =['id','address', 'city', 'submissionDate', 'completionDate','requestStatus',];
   cities: City[] = [];
   dataSource: MatTableDataSource<Property> = new MatTableDataSource<Property>();
-  @ViewChild(MatPaginator) paginator: any;
   @ViewChild(MatSort, {static: true}) sort: MatSort | undefined;
   properties: Property[] = [];
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalItems!: number;
 
-  ngOnInit(){
+
+  ngAfterViewInit() {
     this.loadCities();
-    this.loadPropertyRequests();
     this.dataSource.sort = this.sort!;
+    this.loadUserPropertyRequests(6, this.currentPage, this.pageSize);
   }
 
-  loadPropertyRequests(): void {
-    // this.propertyService.getAllPropertyRequestsByOwner().subscribe((data: Property[])
-    this.propertyService.getAllPropertyRequests().subscribe((data: Property[]) => {
-      this.dataSource.data = data;
-      this.properties = data;
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadUserPropertyRequests(6, this.currentPage, this.pageSize);
+  }
+
+  loadUserPropertyRequests(id: number, page: number = 0, size: number = 5): void {
+    this.propertyService.getPaginatedPropertiesByOwner(id,page, size).subscribe(response => {
+      this.properties = response.content;
+      this.totalItems = response.totalElements;
+      this.dataSource.data = response.content;
     });
   }
 
@@ -104,11 +113,6 @@ export class PropertyRequestUserComponent implements OnInit{
       return '/'
     }
 
-  }
-
-
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
   }
 
 }
