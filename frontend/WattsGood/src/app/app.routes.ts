@@ -10,6 +10,7 @@ import {PropertyRequestAdminComponent} from "./property/property-request-admin/p
 import {AuthGuard} from "./auth.guard";
 import {Role} from "./model/User";
 import {ProfileComponent} from "./user/profile/profile.component";
+import {AdminRegistrationComponent} from "./user/admin-registration/admin-registration.component";
 
 export const routes: Routes = [
   { path: 'property-registration',
@@ -49,7 +50,7 @@ export const routes: Routes = [
     component: PropertyRequestAdminComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.Admin],
+      roles: [Role.Admin, Role.SuperAdmin],
       activeNotRequired: false,
     },
   },
@@ -58,6 +59,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.Admin, Role.SuperAdmin, Role.Official, Role.User],
+      activeNotRequired: false,
+    },
+  },
+  { path: 'admin-registration',
+    component: AdminRegistrationComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.SuperAdmin],
       activeNotRequired: false,
     },
   },

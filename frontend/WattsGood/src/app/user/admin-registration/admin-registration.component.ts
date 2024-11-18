@@ -1,16 +1,16 @@
-import {Component} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { Component } from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {CommonModule, NgIf} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {MapComponent} from "../../map/map.component";
 import {MatSelectModule} from "@angular/material/select";
-import {CommonModule} from "@angular/common";
-import {AuthService} from "../../service/auth.service";
-import {PopupComponent} from "../../layout/popup/popup.component";
 import {MatDialog} from "@angular/material/dialog";
+import {AuthService} from "../../service/auth.service";
 import {Role, User} from "../../model/User";
+import {PopupComponent} from "../../layout/popup/popup.component";
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-admin-registration',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -19,13 +19,12 @@ import {Role, User} from "../../model/User";
     CommonModule,
     RouterLink
   ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  templateUrl: './admin-registration.component.html',
+  styleUrl: './admin-registration.component.css'
 })
-export class RegisterComponent {
+export class AdminRegistrationComponent {
   constructor(private dialog: MatDialog,
-              private authService:AuthService,
-              private router: Router,) {
+              private authService:AuthService,) {
   }
   uploadedPicture:File|null = null;
   imageError: boolean = false;
@@ -47,16 +46,12 @@ export class RegisterComponent {
   get passwordsMatch(): boolean {
     return this.registerForm.value.password === this.registerForm.value.rePassword;
   }
-
-
   chosenImageChanged($event: Event) {
     const files: FileList | null = ($event.target as HTMLInputElement).files;
     if (files) {
       this.uploadedPicture = files[0];
     }
   }
-
-
   onSubmit() {
     if (this.registerForm.valid && this.passwordsMatch && this.uploadedPicture != null) {
       const user:User = {
@@ -70,8 +65,8 @@ export class RegisterComponent {
         street: this.registerForm.value.street!,
         phone: this.registerForm.value.phone!,
         blocked:false,
-        active:false,
-        role:Role.User
+        active:true,
+        role:Role.Admin
       };
       const formData: FormData = new FormData();
       formData.append('image', this.uploadedPicture, this.uploadedPicture.name);
@@ -80,17 +75,16 @@ export class RegisterComponent {
       this.authService.register(user).subscribe({
         next: (response) => {
           this.authService.uploadFile(formData, this.registerForm.value.email!).subscribe(
-          (response) => {
-            this.loading = false;
-            this.showPopup("Registration successful", "You can sign in as soon as you confirm your email.");
-            this.router.navigate(['/sign-in']);
-          },
-          (error) => {
-            this.loading = false;
-            console.error('Error uploading profile picture:', error);
-            this.showPopup("Registration Failed", "Unable to upload profile picture. Please try again.");
-          });
-
+            (response) => {
+              this.loading = false;
+              this.showPopup("Registration successful", "Admin can sign in using his JMBG as his password.");
+              this.registerForm.reset();
+            },
+            (error) => {
+              this.loading = false;
+              console.error('Error uploading profile picture:', error);
+              this.showPopup("Registration Failed", "Unable to upload profile picture. Please try again.");
+            });
         },
         error: (error) => {
           this.loading = false;
@@ -225,5 +219,4 @@ export class RegisterComponent {
     }
     return '';
   }
-
 }

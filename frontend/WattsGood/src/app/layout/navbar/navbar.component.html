@@ -1,50 +1,34 @@
 <header class="header" >
-  <!-- Topbar -->
-  <!-- End Topbar -->
-  <!-- Header Inner -->
   <div class="header-inner">
     <div class="container">
       <div class="inner">
         <div class="row">
           <div class="col-lg-3 col-md-3 col-12">
-            <!-- Start Logo -->
             <div class="logo">
               <img src="/assets/logo.png" alt="#">
             </div>
-            <!-- End Logo -->
-            <!-- Mobile Nav -->
             <div class="mobile-nav"></div>
-            <!-- End Mobile Nav -->
           </div>
           <div class="col-lg-7 col-md-9 col-12">
-            <!-- Main Menu -->
             <div class="main-menu">
               <nav class="navigation">
                 <ul class="nav menu">
-                  <li class="active"><a>Home </a>
-                  </li>
-                  <li><a>Doctors </a></li>
-                  <li><a>Services </a></li>
-                  <li><a>Pages</a>
-
-                  </li>
-                  <li><a>Blogs </a>
-
-                  </li>
-                  <li><a>Contact Us</a></li>
+                  <li *ngIf="is_Authenticated()" routerLink="/profile" routerLinkActive="active"><a>Profile</a></li>
+                  <li *ngIf="is_SuperAdmin()" routerLink="/admin-registration" routerLinkActive="active"><a>Register Admin</a></li>
+                  <li *ngIf="is_User()" routerLink="/property-requests-user" routerLinkActive="active"><a>Users Property Requests</a></li>
+                  <li *ngIf="is_Admin()" routerLink="/property-requests" routerLinkActive="active"><a>Property Requests</a></li>
+                  <li *ngIf="is_User()" routerLink="/property-registration" routerLinkActive="active"><a>Property Registration</a></li>
                 </ul>
               </nav>
             </div>
-            <!--/ End Main Menu -->
           </div>
           <div class="col-lg-2 col-12">
             <div class="get-quote">
-              <a class="btn" (click)="empty_storage()">Sign In</a>
+              <a class="btn" (click)="empty_storage()">Sign Out</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!--/ End Header Inner -->
 </header>

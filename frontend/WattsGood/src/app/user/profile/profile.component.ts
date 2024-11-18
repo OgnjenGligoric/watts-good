@@ -50,6 +50,18 @@ export class ProfileComponent implements OnInit{
     phone: new FormControl('', []),
     role: new FormControl('', []),
   });
+
+  disableFormControls() {
+    this.registerForm.get('email')?.disable();
+    this.registerForm.get('name')?.disable();
+    this.registerForm.get('surname')?.disable();
+    this.registerForm.get('country')?.disable();
+    this.registerForm.get('city')?.disable();
+    this.registerForm.get('street')?.disable();
+    this.registerForm.get('phone')?.disable();
+    this.registerForm.get('role')?.disable();
+  }
+
   ngOnInit(): void {
     this.loading = true;
     this.userService.getAuthenticatedUser().subscribe({
@@ -73,6 +85,7 @@ export class ProfileComponent implements OnInit{
         this.authService.logout();
       }
     });
+    this.disableFormControls();
   }
 
   private showPopup(tittle:string, message:string){
