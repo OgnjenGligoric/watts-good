@@ -17,6 +17,9 @@ import {Property} from "../../model/Property";
 import {CityService} from "../../service/city.service";
 import {MatButton} from "@angular/material/button";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
+import {MatDialog} from "@angular/material/dialog";
+import {PopupComponent} from "../../layout/popup/popup.component";
+import {PropertyRequestComponent} from "../../dialog/property-request/property-request.component";
 
 @Component({
   selector: 'app-property-request-admin',
@@ -45,34 +48,38 @@ import {MatSort, MatSortHeader} from "@angular/material/sort";
 })
 export class PropertyRequestAdminComponent implements AfterViewInit{
 
-  constructor(private propertyService: PropertyService) {
+  constructor(private propertyService: PropertyService,private dialog: MatDialog) {
   }
 
   displayedColumns: string[] =['id','address', 'city', 'submissionDate', 'floorNumber','requestStatus','actions'];
   dataSource: MatTableDataSource<Property> = new MatTableDataSource<Property>();
-  @ViewChild(MatPaginator) paginator: any;
   @ViewChild(MatSort, {static: true}) sort: MatSort | undefined;
   properties: Property[] = [];
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalItems!: number;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort!;
+    this.loadPropertyRequests(this.currentPage, this.pageSize);
   }
 
-
-  ngOnInit(): void {
-    this.loadPropertyRequests();
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPropertyRequests(this.currentPage, this.pageSize);
   }
 
-  loadPropertyRequests(): void {
-    this.propertyService.getPendingPropertyRequests().subscribe((data: Property[]) => {
-      this.dataSource.data = data;
+  loadPropertyRequests(page: number = 0, size: number = 5): void {
+    this.propertyService.getPendingPropertyRequests(page, size).subscribe(response => {
+      this.properties = response.content;
+      this.totalItems = response.totalElements;
+      this.dataSource.data = response.content;
     });
   }
-
   acceptRequest(id: number): void {
     this.propertyService.acceptPropertyRequest(id).subscribe(() => {
-      alert('Request accepted!');
+      this.showPopupSuccess('Successful',`Successfully accepted property request with id ${id}`)
       this.loadPropertyRequests();
     }, error => {
       alert('Failed to accept the request.');
@@ -80,15 +87,8 @@ export class PropertyRequestAdminComponent implements AfterViewInit{
   }
 
   declineRequest(id: number): void {
-    this.propertyService.declinePropertyRequest(id).subscribe(() => {
-      alert('Request declined!');
-      this.loadPropertyRequests();
-    }, error => {
-      alert('Failed to decline the request.');
-    });
+    this.showPopup(id)
   }
-
-
 
   formatDate(dateArray: number[]): string {
     if (Array.isArray(dateArray)) {
@@ -106,6 +106,30 @@ export class PropertyRequestAdminComponent implements AfterViewInit{
     else{
       return '/'
     }
+  }
+
+  private showPopup(id:number){
+    const dialog = this.dialog.open(PropertyRequestComponent, {
+      width: '500px',
+      data: { id: id }
+    });
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadPropertyRequests();
+        this.showPopupSuccess('Successful',`Successfully declined property request with id ${id}`)
+      }
+    });
+  }
+
+  private showPopupSuccess(tittle:string, message:string){
+    this.dialog.open(PopupComponent, {
+      width: '300px',
+      disableClose: true,
+      data: {
+        title: tittle,
+        message: message
+      }
+    });
   }
 
 }
