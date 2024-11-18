@@ -79,11 +79,12 @@ export class LoginComponent {
           this.userService.getAuthenticatedUser().subscribe({
             next: (user) => {
               this.loading = false;
+              this.authService.storeActive(user.active);
 
-              if(user.active){
-                this.router.navigate(['/']);
+              if(this.authService.isActive()){
+                this.router.navigate(['/profile']);
               }
-              else if(user.role == Role.SuperAdmin){
+              else if(this.authService.getRole() == Role.SuperAdmin){
                 this.router.navigate(['/activate-super-admin']);
               }else{
                 this.showPopup('Activate account', 'Check your email and activate it.')
