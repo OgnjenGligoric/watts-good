@@ -55,18 +55,26 @@ func generateConsumption(currentTime time.Time) float64 {
 }
 
 func logLastSuccessfullySent(householdID string, messageBody []byte) {
-	fileName := "household_consumption_" + householdID + ".bin"
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalf("Failed to open or create file: %v", err)
-	}
-	defer file.Close()
+    dirName := "last_consumption"
+    fileName := dirName + "/household_consumption_" + householdID + ".bin"
 
-	// Write the message body to file
-	if _, err := file.Write(messageBody); err != nil {
-		log.Printf("Failed to write to file: %v", err)
-	}
-	if _, err := file.Write([]byte("\n")); err != nil {
-		log.Printf("Failed to write newline to file: %v", err)
-	}
+    // Create the directory if it doesn't exist
+    if err := os.MkdirAll(dirName, 0755); err != nil {
+        log.Fatalf("Failed to create directory: %v", err)
+    }
+
+    file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
+    if err != nil {
+        log.Fatalf("Failed to open or create file: %v", err)
+    }
+    defer file.Close()
+
+    // Write the message body to file
+    if _, err := file.Write(messageBody); err != nil {
+        log.Printf("Failed to write to file: %v", err)
+    }
+    if _, err := file.Write([]byte("\n")); err != nil {
+        log.Printf("Failed to write newline to file: %v", err)
+    }
 }
+
