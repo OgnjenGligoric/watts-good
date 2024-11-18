@@ -33,8 +33,9 @@ public class AuthenticationService implements IAuthenticationService {
             throw new UserAlreadyExistsException("User already exists with email " + userDTO.getEmail());
         }
         User user = userService.createUser(new User(userDTO, true));
-
-        this.emailService.sendAccountConfirmationEmail(userDTO.getEmail(), user.getPassword());
+        if(!user.isActive()){
+            this.emailService.sendAccountConfirmationEmail(userDTO.getEmail(), user.getPassword());
+        }
         return user;
     }
 
