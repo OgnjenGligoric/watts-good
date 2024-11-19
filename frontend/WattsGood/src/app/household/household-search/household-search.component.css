@@ -7,15 +7,16 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 15%;
+    padding-right: 15%;
     width: 100%;
     justify-content: center;
+    
 }
   
   mat-card {
     width: max-content;
-    background: white;
+    background: rgb(240, 240, 240);
     border-radius: 25px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow */
     transition: box-shadow 0.3s ease-in-out; /* Smooth transition for hover effect */
@@ -35,4 +36,23 @@
     color: red;
     font-weight: bold;
   }
+  form {
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 1vh;
+    margin-top: 2vh;
+    justify-content: center;
+    align-items: start;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    border-radius: 20px;
+  }
   
+  mat-form-field {
+    width: 100%;
+  }
+  
+  button {
+    margin-top: 16px;
+  }

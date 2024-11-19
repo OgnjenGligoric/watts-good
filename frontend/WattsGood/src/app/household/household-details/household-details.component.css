@@ -13,6 +13,10 @@
 }
 mat-label {
     font-weight: 600; /* Increases the font weight */
+    color: gray;
+}
+button { 
+    border-radius: 20px;
 }
 .statistics-form-container{
     width: 100%;
