@@ -19,5 +19,8 @@ public class HouseholdService implements IHouseholdService {
     public List<Household> getAllHouseholds() {
         return repository.findAll();
     }
-    
+    @Override
+    public List<Household> searchHouseholdsBy(String city, Integer squareMeters, Integer floorNumber){
+        return repository.searchHouseholdsBy(city, squareMeters, floorNumber);
+    }
 }

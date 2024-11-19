@@ -11,7 +11,7 @@
 
   <div>
     <mat-form-field appearance="fill">
-      <mat-label>Square Meters</mat-label>
+      <mat-label>Min. Square Meters</mat-label>
       <input matInput
              id="squareMeters"
              formControlName="squareMeters"
@@ -26,7 +26,7 @@
 
   <div>
     <mat-form-field appearance="fill">
-      <mat-label>Floor Number</mat-label>
+      <mat-label>Min. Floor Number</mat-label>
       <input matInput id="floorNumber" formControlName="floorNumber" type="number" min="0" />
       <mat-error *ngIf="form.get('floorNumber')?.invalid && form.get('floorNumber')?.touched">
         Floor number must be greater than or equal to 0.

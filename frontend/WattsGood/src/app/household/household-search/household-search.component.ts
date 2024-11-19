@@ -39,6 +39,19 @@ export class HouseholdSearchComponent implements OnInit {
   onSubmit(): void {
     if (this.form && this.form.valid) {
       console.log(this.form.value);
+
+      const { city, squareMeters, floorNumber } = this.form.value;
+
+      this.client.searchHouseholdsBy(city, squareMeters, floorNumber).subscribe(
+        (data: any) => {
+          console.log('Search results:', data);
+          this.households = data;  // Set the households array with the response
+        },
+        (error: any) => {
+          console.error('Error fetching households', error);
+        }
+      );
+
     } else {
       console.log('Form is invalid');
     }
@@ -55,8 +68,8 @@ export class HouseholdSearchComponent implements OnInit {
       }
     );
     this.form = this.fb.group({
-      city: ['', Validators.required],  // 'city' is required
-      squareMeters: ['', [Validators.required, Validators.min(1)]],  // squareMeters must be > 0
-      floorNumber: ['', [Validators.required, Validators.min(0)]],  // floorNumber must be >= 0
+      city: [''],  
+      squareMeters: [1, [Validators.required, Validators.min(1)]],  // squareMeters must be > 0
+      floorNumber: [0, [Validators.required, Validators.min(0)]],  // floorNumber must be >= 0
     });  }
 }

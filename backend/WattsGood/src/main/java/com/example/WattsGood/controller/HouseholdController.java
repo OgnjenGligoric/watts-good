@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.WattsGood.dto.HouseholdGetAllDTO;
@@ -33,6 +34,26 @@ public class HouseholdController {
                                             .toList();
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<HouseholdGetAllDTO>> searchHouseholdsBy(
+        @RequestParam(required = false) String city,
+        @RequestParam(required = false) Integer squareMeters,
+        @RequestParam(required = false) Integer floorNumber
+    ) {
+        logger.info("Entered the searchHouseholdsBy endpoint with parameters: city={}, squareMeters={}, floorNumber={}", city, squareMeters, floorNumber);
+
+        try {
+            List<Household> households = householdService.searchHouseholdsBy(city, squareMeters, floorNumber);
+            List<HouseholdGetAllDTO> dtos = households.stream()
+                                            .map(HouseholdGetAllDTO::new)
+                                            .toList();
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error occurred while searching households: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
