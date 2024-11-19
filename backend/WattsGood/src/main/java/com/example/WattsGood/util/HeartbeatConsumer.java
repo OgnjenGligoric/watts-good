@@ -21,9 +21,9 @@ public class HeartbeatConsumer {
     public void consumeMessage(String message) {
         try {
             HeartbeatMessage heartbeatData = objectMapper.readValue(message, HeartbeatMessage.class);
-            logger.info("Received Heartbeat: {}", heartbeatData); // Log the heartbeat data
+            // logger.info("Received Heartbeat: {}", heartbeatData); // Log the heartbeat data
         } catch (Exception e) {
-            logger.error("Error processing message: {}", e.getMessage()); // Log errors
+            // logger.error("Error processing message: {}", e.getMessage()); // Log errors
         }
     }
 }

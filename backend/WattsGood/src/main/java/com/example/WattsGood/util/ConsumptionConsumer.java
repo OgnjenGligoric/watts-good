@@ -24,10 +24,10 @@ public class ConsumptionConsumer {
     public void consumeMessage(String message) {
         try {
             ConsumptionMessage consumptionMessage = objectMapper.readValue(message, ConsumptionMessage.class);
-            logger.info("Received Consumption: {}", consumptionMessage); // Log the heartbeat data
+            // logger.info("Received Consumption: {}", consumptionMessage); // Log the heartbeat data
             messagingTemplate.convertAndSend("/socket-publisher", consumptionMessage); // Broadcasting the message to clients
         } catch (Exception e) {
-            logger.error("Error processing message: {}", e.getMessage()); // Log errors
+            // logger.error("Error processing message: {}", e.getMessage()); // Log errors
         }
     }
 }
