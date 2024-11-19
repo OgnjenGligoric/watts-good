@@ -17,6 +17,7 @@
                   <li *ngIf="is_SuperAdmin()" routerLink="/admin-registration" routerLinkActive="active"><a>Register Admin</a></li>
                   <li *ngIf="is_User()" routerLink="/property-requests-user" routerLinkActive="active"><a>Users Property Requests</a></li>
                   <li *ngIf="is_Admin()" routerLink="/property-requests" routerLinkActive="active"><a>Property Requests</a></li>
+                  <li *ngIf="is_Admin()" routerLink="/household-search" routerLinkActive="active"><a>Search Households</a></li>
                   <li *ngIf="is_User()" routerLink="/property-registration" routerLinkActive="active"><a>Property Registration</a></li>
                 </ul>
               </nav>
