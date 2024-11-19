@@ -15,7 +15,7 @@ public interface IPropertyService {
 
 //    Property createProperty(Property property);
     Property createPropertyWithFiles(Property property, List<MultipartFile> images, List<MultipartFile> pdfs) throws IOException;
-    Page<Property> findByOwnerPaginated(Long id, Pageable pageable);
+    Page<Property> findByOwnerPaginated(String ownerEmail, Pageable pageable);
     List<Property> getAllProperties();
     Optional<Property> getById(Long id);
     Page<Property> findByRequestStatus(PropertyRequest status, Pageable pageable);

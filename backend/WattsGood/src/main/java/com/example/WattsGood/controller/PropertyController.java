@@ -95,13 +95,13 @@ public class PropertyController {
         }
     }
 
-    @GetMapping(value = "/owner/{id}/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/owner/{ownerEmail}/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Property>> getPropertiesByOwnerIdPaginated(
-            @PathVariable Long id,
+            @PathVariable String ownerEmail,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try {
-            Page<Property> properties = propertyService.findByOwnerPaginated(id, PageRequest.of(page, size));
+            Page<Property> properties = propertyService.findByOwnerPaginated(ownerEmail, PageRequest.of(page, size));
             return new ResponseEntity<>(properties, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

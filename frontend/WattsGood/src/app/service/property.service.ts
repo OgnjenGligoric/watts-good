@@ -43,11 +43,11 @@ export class PropertyService {
     return this.httpClient.get<Page<Property>>(url, { params });
   }
 
-  getPaginatedPropertiesByOwner(id: number, page: number, size: number): Observable<Page<Property>> {
+  getPaginatedPropertiesByOwner(ownerEmail: string, page: number, size: number): Observable<Page<Property>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    const url = environment.apiHost + `properties/owner/${id}/paginated`;
+    const url = environment.apiHost + `properties/owner/${ownerEmail}/paginated`;
     return this.httpClient.get<Page<Property>>(url, { params });
   }
 
@@ -86,8 +86,6 @@ export class PropertyService {
     if (filters.sortDirection) {
       params = params.set('sortDirection', filters.sortDirection);
     }
-
-    console.log(params)
 
     const url = environment.apiHost + `properties/owner/${ownerEmail}/filters`;
     return this.httpClient.get<Page<Property>>(url, { params });

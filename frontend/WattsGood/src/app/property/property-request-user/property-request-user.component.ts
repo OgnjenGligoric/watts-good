@@ -78,7 +78,7 @@ export class PropertyRequestUserComponent implements AfterViewInit{
   ngAfterViewInit() {
     this.loadCities();
     this.dataSource.sort = this.sort!;
-    this.loadUserPropertyRequests(6, this.currentPage, this.pageSize);
+    this.loadUserPropertyRequests(this.authService.getEmail()!, this.currentPage, this.pageSize);
   }
 
 
@@ -117,8 +117,8 @@ export class PropertyRequestUserComponent implements AfterViewInit{
     this.loadUserPropertyRequestsWithFilters(this.authService.getEmail()!, this.currentPage, this.pageSize,this.currentFilters);
   }
 
-  loadUserPropertyRequests(id: number, page: number = 0, size: number = 5): void {
-    this.propertyService.getPaginatedPropertiesByOwner(id,page, size).subscribe(response => {
+  loadUserPropertyRequests(ownerEmail: string, page: number = 0, size: number = 5): void {
+    this.propertyService.getPaginatedPropertiesByOwner(ownerEmail,page, size).subscribe(response => {
       this.properties = response.content;
       this.totalItems = response.totalElements;
       this.dataSource.data = response.content;

@@ -111,8 +111,8 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public Page<Property> findByOwnerPaginated(Long id, Pageable pageable) {
-        return propertyRepository.findAllByOwnerId(id,pageable);
+    public Page<Property> findByOwnerPaginated(String ownerEmail, Pageable pageable) {
+        return propertyRepository.findAllByOwnerEmail(ownerEmail,pageable);
     }
 
     @Override
