@@ -1,14 +1,15 @@
-<mat-form-field appearance="outline">
 
-  <input matInput formControlName="releasedAt" 
-         [matDatepicker]="releasedAtPicker" (click)="releasedAtPicker.open()">
+<div class="statistics-form-container">
+  <div class="statistics-form">
+    <mat-label>Statistics time range:</mat-label>
+    <input class="time-range" [owlDateTimeTrigger]="dt10" [owlDateTime]="dt10"
+    [(ngModel)]="selectedMoments"
+   [selectMode]="'range'"
+   (ngModelChange)="validateDateRange()">
+    <owl-date-time #dt10></owl-date-time>
+    <button mat-raised-button style=" border-radius: 20%;">    <mat-label style="color: gray;">View Statistics</mat-label>
+    </button>
+  </div>
+</div>
 
-  <mat-datepicker-toggle matSuffix [for]="releasedAtPicker">
 
-  </mat-datepicker-toggle>
-
-  <mat-datepicker #releasedAtPicker>
-
-  </mat-datepicker>
-
-</mat-form-field>
