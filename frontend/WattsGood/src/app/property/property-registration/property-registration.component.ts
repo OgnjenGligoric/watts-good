@@ -95,7 +95,7 @@ export class PropertyRegistrationComponent{
       this.households.push(household);
       this.householdForm.reset();
     }else{
-      alert("Please insert valid values into household form! ")
+      this.showPopup('Invalid household form','Please insert valid values into household form!')
     }
   }
 

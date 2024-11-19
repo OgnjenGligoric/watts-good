@@ -15,12 +15,15 @@ public interface IPropertyService {
 
 //    Property createProperty(Property property);
     Property createPropertyWithFiles(Property property, List<MultipartFile> images, List<MultipartFile> pdfs) throws IOException;
-    Page<Property> findByOwnerPaginated(Long id, Pageable pageable);
+    Page<Property> findByOwnerPaginated(String ownerEmail, Pageable pageable);
     List<Property> getAllProperties();
     Optional<Property> getById(Long id);
     Page<Property> findByRequestStatus(PropertyRequest status, Pageable pageable);
     Property acceptPropertyRequest(Long id) throws MessagingException;
     Property declinePropertyRequest(Long id,String reason) throws MessagingException;
     List<Property> findByOwner(Long ownerId);
+
+    Page<Property> findPropertiesWithFilters(String ownerEmail, Long city, String address, PropertyRequest requestStatus,String search, String sortColumn, String sortDirection, Pageable pageable);
+
 
 }
