@@ -94,6 +94,12 @@ public class PropertyService implements IPropertyService {
         return propertyRepository.findAll();
     }
 
+    public Page<Property> findPropertiesWithFilters(String ownerEmail, Long city, String address,
+                                                    PropertyRequest requestStatus, String search,String sortColumn, String sortDirection, Pageable pageable) {
+
+        return propertyRepository.findFilteredPropertiesWithSearch(ownerEmail, city, address, requestStatus, search, sortColumn, sortDirection, pageable);
+    }
+
     @Override
     public Optional<Property> getById(Long id) {
         return propertyRepository.findById(String.valueOf(id));
@@ -105,8 +111,8 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public Page<Property> findByOwnerPaginated(Long id, Pageable pageable) {
-        return propertyRepository.findAllByOwnerId(id,pageable);
+    public Page<Property> findByOwnerPaginated(String ownerEmail, Pageable pageable) {
+        return propertyRepository.findAllByOwnerEmail(ownerEmail,pageable);
     }
 
     @Override

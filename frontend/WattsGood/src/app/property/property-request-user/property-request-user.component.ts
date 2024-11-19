@@ -3,7 +3,7 @@ import {HouseholdCardComponent} from "../../household/household-card/household-c
 import {MapComponent} from "../../map/map.component";
 import {MatLabel} from "@angular/material/form-field";
 import {NgForOf} from "@angular/common";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatPaginator} from "@angular/material/paginator";
 import {
   MatCell, MatCellDef,
@@ -18,8 +18,9 @@ import {City} from "../../model/City";
 import {CityService} from "../../service/city.service";
 import {Property} from "../../model/Property";
 import {PropertyService} from "../../service/property.service";
-import {MatSort, MatSortModule} from "@angular/material/sort";
+import {MatSort, MatSortModule, Sort} from "@angular/material/sort";
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {AuthService} from "../../service/auth.service";
 
 @Component({
   selector: 'app-property-request-user',
@@ -51,9 +52,9 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-b
 
 export class PropertyRequestUserComponent implements AfterViewInit{
 
-  constructor(private cityService: CityService,private propertyService: PropertyService,) {
+  constructor(private cityService: CityService,private propertyService: PropertyService, private authService: AuthService) {
   }
-
+  currentFilters: { city?: string; address?: string; requestStatus?: string; search?: string; sortColumn?: string; sortDirection?: string } = {};
   displayedColumns: string[] =['id','address', 'city', 'submissionDate', 'completionDate','requestStatus',];
   cities: City[] = [];
   dataSource: MatTableDataSource<Property> = new MatTableDataSource<Property>();
@@ -62,26 +63,85 @@ export class PropertyRequestUserComponent implements AfterViewInit{
   currentPage: number = 0;
   pageSize: number = 5;
   totalItems!: number;
+  sortColumn: string = 'id';
+  sortDirection: string = 'asc';
+
+
+  filterForm = new FormGroup<any>({
+    requestStatus: new FormControl("",),
+    city: new FormControl("",),
+    address: new FormControl('',),
+    search: new FormControl('',),
+  });
 
 
   ngAfterViewInit() {
     this.loadCities();
     this.dataSource.sort = this.sort!;
-    this.loadUserPropertyRequests(6, this.currentPage, this.pageSize);
+    this.loadUserPropertyRequests(this.authService.getEmail()!, this.currentPage, this.pageSize);
   }
+
+
+  onSubmitFilters(): void {
+    const filters = this.filterForm.value;
+    this.currentFilters = {
+      city: filters.city,
+      address: filters.address,
+      requestStatus: filters.requestStatus,
+      search: filters.search,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection,
+    };
+
+    this.loadUserPropertyRequestsWithFilters(this.authService.getEmail()!, this.currentPage, this.pageSize, this.currentFilters);
+  }
+
+
+  onSortChange(event: Sort): void {
+    this.sortColumn = event.active;
+    this.sortDirection = event.direction;
+
+    this.currentFilters = {
+      ...this.currentFilters,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection,
+    };
+
+    this.loadUserPropertyRequestsWithFilters(this.authService.getEmail()!, this.currentPage, this.pageSize, this.currentFilters);
+  }
+
 
   onPageChange(event: any): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadUserPropertyRequests(6, this.currentPage, this.pageSize);
+    this.loadUserPropertyRequestsWithFilters(this.authService.getEmail()!, this.currentPage, this.pageSize,this.currentFilters);
   }
 
-  loadUserPropertyRequests(id: number, page: number = 0, size: number = 5): void {
-    this.propertyService.getPaginatedPropertiesByOwner(id,page, size).subscribe(response => {
+  loadUserPropertyRequests(ownerEmail: string, page: number = 0, size: number = 5): void {
+    this.propertyService.getPaginatedPropertiesByOwner(ownerEmail,page, size).subscribe(response => {
       this.properties = response.content;
       this.totalItems = response.totalElements;
       this.dataSource.data = response.content;
     });
+  }
+
+  loadUserPropertyRequestsWithFilters(
+    ownerEmail: string, page: number = 0, size: number = 5,
+    filters: { city?: string; address?: string; requestStatus?: string; search?: string; sortColumn?: string; sortDirection?: string } = {}
+  ): void {
+    const sortParams = {
+      ...filters,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection
+    };
+
+    this.propertyService
+      .getPaginatedPropertiesByOwnerWithFilter(ownerEmail, page, size, sortParams)
+      .subscribe(response => {
+        this.properties = response.content;
+        this.totalItems = response.totalElements;
+        this.dataSource.data = response.content;
+      });
   }
 
   loadCities(){
