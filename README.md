@@ -7,6 +7,9 @@ We can easily run the whole with only a single command:
 ```bash
 docker compose up
 ```
+```bash
+npm install -g @angular/cli
+```
 
 Docker will pull the PostgreSQL and Spring Boot images (if our machine does not have it before).
 

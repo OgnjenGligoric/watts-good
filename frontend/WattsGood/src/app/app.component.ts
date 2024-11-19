@@ -6,7 +6,9 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import "leaflet/dist/images/marker-shadow.png"
-
+import { HouseholdDetailsComponent } from './household/household-details/household-details.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 @Component({
   selector: 'app-root',
   standalone: true,

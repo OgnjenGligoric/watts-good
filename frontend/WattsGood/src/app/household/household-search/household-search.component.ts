@@ -5,11 +5,14 @@ import { AnyARecord } from 'node:dns';
 import { HouseholdGetAllDTO } from '../../model/dto/HouseholdGetAllDTO';
 import { MatCardModule } from '@angular/material/card'; // Import Angular Material Card module
 import { NgFor, NgClass } from '@angular/common'; // Import common directives like *ngFor and [ngClass]
+import { RouterModule, Routes } from '@angular/router';
 
 @Component({
   selector: 'app-household-search',
   standalone: true,
-  imports: [HttpClientModule,MatCardModule,NgFor,NgClass],
+  imports: [HttpClientModule,
+    MatCardModule,
+    NgFor,NgClass, RouterModule],
   templateUrl: './household-search.component.html',
   styleUrls: ['./household-search.component.css']
 })
