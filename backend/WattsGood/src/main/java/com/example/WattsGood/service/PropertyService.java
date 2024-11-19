@@ -5,7 +5,6 @@ import com.example.WattsGood.model.Property;
 import com.example.WattsGood.model.User;
 import com.example.WattsGood.repository.IPropertyRepository;
 import com.example.WattsGood.repository.IUserRepository;
-import com.example.WattsGood.service.interfaces.IAuthenticationService;
 import com.example.WattsGood.service.interfaces.IPropertyService;
 import com.example.WattsGood.util.PropertyRequest;
 import jakarta.mail.MessagingException;
@@ -24,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

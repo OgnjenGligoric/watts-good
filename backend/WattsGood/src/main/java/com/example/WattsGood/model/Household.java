@@ -25,5 +25,6 @@ public class Household {
     private User owner;
     private int squareMeters;
     private int floorNumber;
-
+    private boolean isActive;
+    private long lastHeartbeatTimestamp;
 }

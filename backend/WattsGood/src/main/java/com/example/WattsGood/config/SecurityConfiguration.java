@@ -40,7 +40,8 @@ public class SecurityConfiguration {
                                         "/api/images/**",
                                          "/api/users/activate/**", 
                                          "/api/properties/**",
-                                          "/api/cities/**", 
+                                          "/api/cities/**",
+                                          "/api/households/**", 
                                           "/socket/**").permitAll()
                         .anyRequest().authenticated()
                 )
