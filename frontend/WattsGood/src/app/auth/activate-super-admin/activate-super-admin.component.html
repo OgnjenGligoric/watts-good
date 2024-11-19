@@ -1,0 +1,33 @@
+<section class="contact-us section">
+  <div class="container" id="propertyContainer">
+    <div class="inner">
+      <div class="contact-us-form">
+        <h2>Activate your account</h2>
+        <p>To activate the super admin account enter a new password</p>
+        <form class="form" [formGroup]="activateForm">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" formControlName="password" required="true">
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="RePassword">Re-enter Password</label>
+                <input type="password" id="RePassword" formControlName="rePassword" required="true">
+              </div>
+            </div>
+
+            <div class="row buttons">
+              <div class="col-lg-3 col-md-5 col-sm-4">
+                <button class="btn" type="submit" (click)="onSubmit()">Activate</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,42 @@
+<section class="contact-us section">
+  <div class="container custom-width" id="propertyContainer">
+    <div class="inner">
+      <div class="contact-us-form">
+        <h2>Login</h2>
+        <p></p>
+        <form class="form" [formGroup]="loginForm">
+          <div class="row">
+            <div class="row">
+              <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="text" id="Email" formControlName="email" required="true">
+                <div *ngIf="email?.touched && email?.invalid" class="error-text">{{ emailErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" formControlName="password" required="true">
+                <div *ngIf="password?.touched && password?.invalid" class="error-text">{{ passwordErrorMessage }}</div>
+              </div>
+            </div>
+
+            <div class="row buttons">
+              <div class="col-lg-4 col-md-5 col-sm-4">
+                <button class="btn d-flex align-items-center" type="submit" (click)="onSubmit()" [disabled]="loading">
+                  <div class="flex-grow-1">Sign in</div>
+                  <div *ngIf="loading" class="spinner ml-2"></div>
+                </button>
+              </div>
+
+              <div class="col-lg-4 col-md-5 col-sm-4">
+                <button class="btn" routerLink="/register">Register</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

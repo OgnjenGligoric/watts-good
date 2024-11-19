@@ -20,6 +20,7 @@ import {Property} from "../../model/Property";
 import {Location} from "../../model/Location";
 import {PropertyRequest} from "../../model/PropertyRequest";
 import {PropertyService} from "../../service/property.service";
+import {PopupComponent} from "../../layout/popup/popup.component";
 
 
 
@@ -52,8 +53,8 @@ export class PropertyRegistrationComponent{
     floorNumber: new FormControl(0,[Validators.required] ),
     location: new FormControl('',[Validators.required]),
     city: new FormControl('',[Validators.required]),
-    // images: new FormControl('',[Validators.required]),
-    // pdf: new FormControl('',[Validators.required]),
+    images: new FormControl('',[Validators.required]),
+    pdf: new FormControl('',[Validators.required]),
   });
 
   householdForm = new FormGroup({
@@ -94,12 +95,15 @@ export class PropertyRegistrationComponent{
       this.households.push(household);
       this.householdForm.reset();
     }else{
-      alert("Please insert valid values into household form! ")
+      this.showPopup('Invalid household form','Please insert valid values into household form!')
     }
   }
 
   onSubmitProperty() {
-    if (this.propertyRegistrationForm.valid) {
+    if (this.propertyRegistrationForm.valid &&
+      this.uploadedPictures.length != 0 &&
+      this.uploadedPdfs.length != 0 &&
+      this.households.length != 0) {
       const propertyLocation: Location = {
         latitude: this.latitude,
         longitude: this.longitude
@@ -117,20 +121,23 @@ export class PropertyRegistrationComponent{
         completionDate: null,
       };
 
-      this.propertyService.createProperty(property).subscribe(
+      this.propertyService.createProperty(property,this.uploadedPictures,this.uploadedPdfs).subscribe(
         (response) => {
-          alert('Property created successfully');
-          window.location.reload();
+          this.showPopup('Successfull','Successfully created property!')
+          this.clearForms();
         }
       );
     }else{
-      alert("Invalid property form")
+      this.showPopup('Invalid property form','Please fill out the form correctly')
     }
   }
 
-
-
-
+  clearForms(){
+    this.households = [];
+    this.uploadedPdfs = [];
+    this.uploadedPictures =[];
+    this.propertyRegistrationForm.reset();
+  }
 
   updateCoordinates(event: { lat: number, lng: number, address: string }): void {
     this.latitude = event.lat;
@@ -181,6 +188,17 @@ export class PropertyRegistrationComponent{
 
   removeHouseholdCard(index: number): void {
     this.households.splice(index, 1);
+  }
+
+  private showPopup(tittle:string, message:string){
+    this.dialog.open(PopupComponent, {
+      width: '300px',
+      disableClose: true,
+      data: {
+        title: tittle,
+        message: message
+      }
+    });
   }
 
 }
