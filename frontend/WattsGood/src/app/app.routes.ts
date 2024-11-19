@@ -47,11 +47,11 @@ export const routes: Routes = [
   },
   { path: 'property-requests',
     component: PropertyRequestAdminComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.Admin],
-      activeNotRequired: false,
-    },
+    // canActivate: [AuthGuard],
+    // data: {
+    //   roles: [Role.Admin],
+    //   activeNotRequired: false,
+    // },
   },
   { path: 'profile',
     component: ProfileComponent,

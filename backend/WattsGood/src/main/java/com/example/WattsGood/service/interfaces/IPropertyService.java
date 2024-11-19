@@ -23,4 +23,7 @@ public interface IPropertyService {
     Property declinePropertyRequest(Long id,String reason) throws MessagingException;
     List<Property> findByOwner(Long ownerId);
 
+    Page<Property> findPropertiesWithFilters(String ownerEmail, Long city, String address, PropertyRequest requestStatus,String search, String sortColumn, String sortDirection, Pageable pageable);
+
+
 }

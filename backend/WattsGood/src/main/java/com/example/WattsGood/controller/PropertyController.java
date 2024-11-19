@@ -108,6 +108,28 @@ public class PropertyController {
         }
     }
 
+    @GetMapping(value = "/owner/{ownerEmail}/filters", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<Property>> getPropertiesByOwnerIdPaginated(
+            @PathVariable String ownerEmail,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(value = "sortColumn", required = false) String sortColumn,
+            @RequestParam(value = "sortDirection", required = false) String sortDirection,
+            @RequestParam(required = false) Long city,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) PropertyRequest requestStatus,
+            @RequestParam(required = false) String search) {
+        try {
+
+            Page<Property> properties = propertyService.findPropertiesWithFilters(
+                    ownerEmail, city, address, requestStatus, search,sortColumn,sortDirection,PageRequest.of(page, size));
+            return new ResponseEntity<>(properties, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Property> getPropertyById(@PathVariable Long id) {
         try {
