@@ -1,1 +1,20 @@
-<p>household-search works!</p>
+<div class="household-card" *ngFor="let household of households">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Apartment {{ household.apartmentNumber }}</mat-card-title>
+        <mat-card-subtitle>{{ household.cityName }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Address:</strong> {{ household.address }}</p>
+        <p><strong>Floor:</strong> {{ household.floorNumber }}</p>
+        <p><strong>Size:</strong> {{ household.squareMeters }} m²</p>
+        <p>
+          <strong>Status:</strong> 
+          <span [ngClass]="household.active ? 'active' : 'inactive'">
+            {{ household.active ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
