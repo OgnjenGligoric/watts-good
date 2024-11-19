@@ -560,11 +560,20 @@ table {
 }
 
 .household-popup .form .btn:hover {
-  background: #1A76D1;
+  background: #333;
+  color: #fff;
+}
+
+.contact-us .form .btn:hover {
+  background: #333;
+  color: #fff;
 }
 
 
-
+.btn:hover{
+  background: #333;
+  color: #fff;
+}
 
 
 

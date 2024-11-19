@@ -128,7 +128,7 @@ public class PropertyService implements IPropertyService {
     public Property declinePropertyRequest(Long id,String reason) throws MessagingException {
         Property property = propertyRepository.findById(String.valueOf(id)).get();
         property.setRequestStatus(PropertyRequest.Declined);
-
+        property.setCompletionDate(LocalDateTime.now());
         emailService.sendPropertyRejectionEmail(property.getOwner().getEmail(),reason);
         return propertyRepository.save(property);
     }
