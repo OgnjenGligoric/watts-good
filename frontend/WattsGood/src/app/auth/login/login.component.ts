@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatSelectModule} from "@angular/material/select";
@@ -11,10 +11,12 @@ import {LoginInfo} from "../../model/LoginInfo";
 import {UserService} from "../../service/user.service";
 import {Role} from "../../model/User";
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
+
     ReactiveFormsModule,
     MatSelectModule,
     CommonModule,
@@ -23,11 +25,14 @@ import {Role} from "../../model/User";
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   constructor(private dialog: MatDialog,
               private authService:AuthService,
               private router: Router,
               private userService: UserService) {
+  }
+  ngOnInit(): void {
+    this.authService.logout();
   }
 
   loginForm = new FormGroup({
