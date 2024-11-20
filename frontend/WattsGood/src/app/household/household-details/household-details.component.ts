@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import {MatButtonModule} from '@angular/material/button';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { HouseholdService } from '../../service/household.service';
 
 
 
@@ -32,6 +33,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 export class HouseholdDetailsComponent {
   householdId: number | null = null;
   exceedesOneYearDifference: boolean = false;
+  activityHistory: any[] = [];  // This will hold the fetched activity history
+
   public selectedMoments = [
     new Date(),
     new Date()
@@ -83,7 +86,9 @@ export class HouseholdDetailsComponent {
 	}
 
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,
+    private householdService: HouseholdService
+   ) {
   }
 
   ngOnInit(): void {
@@ -97,7 +102,39 @@ export class HouseholdDetailsComponent {
         const differenceInYears = Math.abs(endDate.getFullYear() - startDate.getFullYear());
         const sameYearButExceeds = differenceInYears === 0 && endDate > new Date(startDate.getTime() + 365 * 24 * 60 * 60 * 1000);
         this.exceedesOneYearDifference = differenceInYears > 1 || sameYearButExceeds;
-      } 
+		if(!this.exceedesOneYearDifference){
+			this.fetchActivityHistory()
+		}
+	} 
     }
+  }
+  fetchActivityHistory(): void {
+    // Validate the date range before calling the service
+    if (this.selectedMoments.length === 2 && this.householdId !== null) {
+      const startDate = this.selectedMoments[0].getTime();  // Convert to timestamp
+      const endDate = this.selectedMoments[1].getTime();  // Convert to timestamp
+      
+      this.householdService.getActivityHistory(this.householdId.toString(), startDate, endDate)
+        .subscribe({
+          next: (data) => {
+            this.activityHistory = data;  // Set the data for charts
+            this.updateCharts();  // Optionally, update your charts with the new data
+          },
+          error: (err) => {
+            console.error('Error fetching activity history', err);
+          }
+        });
+    }
+  }
+  updateCharts(): void {
+    // Update the chart options or data with the fetched activity history
+    // For example, format activity history to fit chart data
+    this.BarChartOptions.data[0].dataPoints = this.activityHistory.map(activity => ({
+      x: activity.timestamp,  // Assuming the activity has a timestamp
+      y: activity.value       // Assuming the activity has a value
+    }));
+    
+    // Update pie chart or any other visualization accordingly
+    // Update any other charts based on the activity data you have
   }
 }

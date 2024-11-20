@@ -1,5 +1,6 @@
 package com.example.WattsGood.controller;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,11 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.WattsGood.dto.HouseholdGetAllDTO;
 import com.example.WattsGood.model.Household;
+import com.example.WattsGood.model.HouseholdActivity;
+import com.example.WattsGood.service.InfluxDBService;
 import com.example.WattsGood.service.interfaces.IHouseholdService;
 
 @RestController
 @RequestMapping("/api/households")
 public class HouseholdController {
+
+    private final InfluxDBService influxDBService;
+
+    public HouseholdController(InfluxDBService influxDBService) {
+        this.influxDBService = influxDBService;
+    }
+
     @Autowired
     private IHouseholdService householdService;
     private static final Logger logger = LoggerFactory.getLogger(HouseholdController.class);
@@ -57,4 +67,21 @@ public class HouseholdController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @GetMapping("/activity/history")
+public ResponseEntity<List<HouseholdActivity>> getActivityHistory(
+    @RequestParam String householdId,
+    @RequestParam Long startTime,  // Unix timestamp in milliseconds or seconds
+    @RequestParam Long endTime     // Unix timestamp in milliseconds or seconds
+) {
+    logger.info("Entered the getActivityHistory endpoint with parameters: householdId={}, startTime={}, endTime={}", householdId, startTime, endTime);
+    try {
+        List<HouseholdActivity> activities = influxDBService.getActivityStateHistory(householdId, startTime, endTime);
+        return new ResponseEntity<>(activities, HttpStatus.OK);
+    } catch (Exception e) {
+        logger.error("Error occurred while fetching activity history: {}", e.getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+}
 }

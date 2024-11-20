@@ -29,4 +29,13 @@ export class HouseholdService {
 
     return this.httpClient.get<any>(environment.apiHost + 'households/search', { params });
   }
+
+  getActivityHistory(householdId: string, startTime: number, endTime: number): Observable<any> {
+    const params = new HttpParams()
+      .set('householdId', householdId)
+      .set('startTime', startTime.toString())  // Ensure the timestamps are in milliseconds or seconds as required
+      .set('endTime', endTime.toString());
+
+    return this.httpClient.get<any>(environment.apiHost + 'households/activity/history', { params });
+  }
 }
