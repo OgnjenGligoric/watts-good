@@ -1,0 +1,60 @@
+.household-card {
+    margin: 10px;
+    
+  }
+
+.cards-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 15%;
+    padding-right: 15%;
+    width: 100%;
+    justify-content: center;
+    
+}
+  
+  mat-card {
+    width: max-content;
+    background: rgb(240, 240, 240);
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition for hover effect */
+  }
+  
+  mat-card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1); /* More prominent shadow on hover */
+    cursor:pointer;
+}
+  
+  .active {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .inactive {
+    color: red;
+    font-weight: bold;
+  }
+  form {
+    padding-top: 2vh;
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 1vh;
+    margin-top: 2vh;
+    justify-content: center;
+    align-items: start;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    border-radius: 20px;
+    margin-bottom: 2vh;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  button {
+    margin-top: 16px;
+  }

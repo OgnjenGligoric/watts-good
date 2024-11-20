@@ -11,6 +11,9 @@ import {AuthGuard} from "./auth.guard";
 import {Role} from "./model/User";
 import {ProfileComponent} from "./user/profile/profile.component";
 import {AdminRegistrationComponent} from "./user/admin-registration/admin-registration.component";
+import { StatisticsComponent } from './household/statistics/statistics.component';
+import { HouseholdSearchComponent } from './household/household-search/household-search.component';
+import { HouseholdDetailsComponent } from './household/household-details/household-details.component';
 
 export const routes: Routes = [
   { path: 'property-registration',
@@ -70,8 +73,30 @@ export const routes: Routes = [
       activeNotRequired: false,
     },
   },
+  { 
+    path: 'household-statistics',
+    component: StatisticsComponent
+  },
+  {
+    path: 'household-search',
+    component: HouseholdSearchComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.Admin, Role.SuperAdmin],
+      requiresActive: false,
+    },
+  },
+  { path: 'household-details/:id',
+    component: HouseholdDetailsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.Admin, Role.SuperAdmin],
+      requiresActive: false,
+    },
+  },
   {
     path: '**',
     redirectTo: '/sign-in',
-  },
+  }
+
 ];

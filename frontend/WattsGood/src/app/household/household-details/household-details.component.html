@@ -1,0 +1,23 @@
+
+<div class="statistics-form-container">
+  <div class="statistics-form">
+    <mat-label>Statistics time range:</mat-label>
+    <input class="time-range" [owlDateTimeTrigger]="dt10" [owlDateTime]="dt10"
+    [(ngModel)]="selectedMoments"
+   [selectMode]="'range'"
+   (ngModelChange)="validateDateRange()">
+    <owl-date-time #dt10></owl-date-time>
+    <button mat-raised-button ><mat-label>View Statistics</mat-label>
+    </button>
+    <button mat-raised-button ><mat-label>Last 3 hours ⚡</mat-label>
+    </button>
+  </div>
+</div>
+
+<div class="chart-container">
+  <canvasjs-chart [options]="BarChartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
+</div> 
+<div class="chart-container">
+  <canvasjs-chart [options]="pieChartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
+</div> 
+

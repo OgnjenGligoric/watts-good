@@ -174,6 +174,5 @@ export class PropertyRequestUserComponent implements AfterViewInit{
     }
 
   }
-
 }
 

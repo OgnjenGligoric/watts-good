@@ -1,14 +1,12 @@
 package com.example.WattsGood.controller;
 
 import com.example.WattsGood.dto.ImageUploadResponse;
-import com.example.WattsGood.dto.UserDTO;
 import com.example.WattsGood.model.User;
 import com.example.WattsGood.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
