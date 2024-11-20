@@ -34,7 +34,7 @@ public class AuthenticationService implements IAuthenticationService {
         }
         User user = userService.createUser(new User(userDTO, true));
         if(!user.isActive()){
-            this.emailService.sendAccountConfirmationEmail(userDTO.getEmail(), user.getPassword());
+            this.emailService.sendAccountConfirmationEmail(userDTO.getEmail(), String.valueOf(user.getId()));
         }
         return user;
     }
