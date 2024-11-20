@@ -29,7 +29,7 @@ public class HouseholdService implements IHouseholdService {
 
     @Override
     public Household updateActivity(HeartbeatMessage message) {
-        Household household = repository.getReferenceById(message.getHouseholdId());
+        Household household = repository.getById(message.getHouseholdId());
         household.setActive(true);
         household.setLastHeartbeatTimestamp(message.getTimestamp());
         return repository.save(household);
@@ -38,7 +38,7 @@ public class HouseholdService implements IHouseholdService {
     @Override
     @Transactional // Ensures the query is part of a transactional context
     public void checkAndUpdateInactiveHouseholds(Long currentTime) {
-        long threshold = currentTime - 30000; // 30 seconds
+        long threshold = currentTime - 30; // 30 seconds
         repository.markHouseholdsAsInactive(threshold);
     }
 }

@@ -23,7 +23,7 @@ public class InfluxDBService {
         Point point = Point.measurement("household_activity")
                 .addTag("householdId", householdId)
                 .addField("active", isActive)
-                .time(Instant.now(), WritePrecision.MS);
+                .time(Instant.now(), WritePrecision.S);
 
         try {
             writeApi.writePoint(point);
@@ -32,4 +32,6 @@ public class InfluxDBService {
             System.err.println("Error writing activity state to InfluxDB: " + e.getMessage());
         }
     }
+
+    
 }

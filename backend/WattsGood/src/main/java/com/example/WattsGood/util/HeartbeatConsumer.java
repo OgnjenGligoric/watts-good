@@ -36,24 +36,26 @@ public class HeartbeatConsumer {
         try {
             HeartbeatMessage heartbeatData = objectMapper.readValue(message, HeartbeatMessage.class);
             this.householdService.updateActivity(heartbeatData);
-            logger.info("we are in");
+            logger.info("we are in {}", heartbeatData);
 
         } catch (Exception e) {
             logger.error("Error processing message: {}", e.getMessage());
         }
     }
 
-    @Scheduled(fixedRate = 1000) // Runs every 10 seconds
+    @Scheduled(fixedRate = 5000) // Runs every 10 seconds
     public void checkInactiveHouseholds() {
-        logger.info("Written to InfluxDB: householdId={}, active={}");
         
         try {
-            Long currentTime = Instant.now().toEpochMilli();
-            this.householdService.checkAndUpdateInactiveHouseholds(currentTime);
+            // this.householdService.checkAndUpdateInactiveHouseholds(currentTime);
+            Long currentTime = Instant.now().toEpochMilli()/1000;
+            logger.info("Current time (milliseconds): {}", currentTime);
+            this.householdService.checkAndUpdateInactiveHouseholds(currentTime);    
 
             // Write all households to InfluxDB
             householdService.getAllHouseholds().forEach(household -> {
                 try {
+                    
                     influxDBService.writeActivityState(
                         household.getId().toString(), 
                         household.isActive()
