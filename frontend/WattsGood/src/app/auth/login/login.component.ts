@@ -82,7 +82,14 @@ export class LoginComponent {
               this.authService.storeActive(user.active);
 
               if(this.authService.isActive()){
-                this.router.navigate(['/profile']);
+                let role = this.authService.getRole();
+
+                if(role == Role.SuperAdmin || role == Role.Admin ){
+                  this.router.navigate(['/property-requests']);
+                }else{
+                  this.router.navigate(['/profile']);
+                }
+
               }
               else if(this.authService.getRole() == Role.SuperAdmin){
                 this.router.navigate(['/activate-super-admin']);
