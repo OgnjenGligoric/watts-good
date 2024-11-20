@@ -16,6 +16,6 @@ public interface IHouseholdRepository extends JpaRepository<Household, Long> {
     List<Household> searchHouseholdsBy(String city, Integer minSquareMeters, Integer minFloorNumber);
 
     @Modifying
-    @Query("UPDATE Household h SET h.active = false WHERE h.lastHeartbeatTimestamp < :threshold AND h.active = true")
+    @Query("UPDATE Household h SET h.isActive = false WHERE h.lastHeartbeatTimestamp < :threshold AND h.isActive = true")
     int markHouseholdsAsInactive(@Param("threshold") Long threshold);
 }
