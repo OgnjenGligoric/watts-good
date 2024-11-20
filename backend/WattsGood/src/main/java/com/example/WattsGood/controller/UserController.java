@@ -38,12 +38,12 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/activate/{email}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> activateUser(@PathVariable String password, @PathVariable String email) {
+    @PostMapping(value = "/activate/{email}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> activateUser(@PathVariable String id, @PathVariable String email) {
         Optional<User> userOptional = userService.getByEmail(email);
         if(userOptional.isPresent()){
             User user = userOptional.get();
-            if(user.getPassword().equals(password)){
+            if(String.valueOf(user.getId()).equals(id)){
                 user = userService.activateUser(user);
                 return new ResponseEntity<>(new UserDTO(user),HttpStatus.OK);
             }
