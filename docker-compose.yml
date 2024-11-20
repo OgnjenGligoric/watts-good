@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  rabbitmq: 
+    image: rabbitmq:management
+    ports:
+      - $RABBITMQ_PORT1:$RABBITMQ_PORT1
+      - $RABBITMQ_PORT2:$RABBITMQ_PORT2
+    environment:
+      RABBITMQ_DEFAULT_USER: $RABBITMQ_DEFAULT_USER
+      RABBITMQ_DEFAULT_PASS: $RABBITMQ_DEFAULT_PASS
+    env_file: ./.env 
+
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    env_file: ./.env  
+    environment:
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRESDB_DATABASE
+    ports:
+      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - $INFLUXDB_PORT:$INFLUXDB_PORT
+    env_file: ./.env  
+    environment:
+      INFLUXDB_DB: $INFLUXDB_DB
+      INFLUXDB_ADMIN_USER: $INFLUXDB_ADMIN_USER
+      INFLUXDB_ADMIN_PASSWORD: $INFLUXDB_ADMIN_PASSWORD
+    volumes:
+      - ./influxdb_data:/var/lib/influxdb
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com   
+      PGADMIN_DEFAULT_PASSWORD: admin          
+    ports:
+      - "5050:80"  
+    depends_on:
+      - postgresdb
+
+volumes:
+  influxdb_data:

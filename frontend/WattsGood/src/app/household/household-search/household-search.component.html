@@ -1,0 +1,63 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>City</mat-label>
+      <input matInput id="city" formControlName="city" type="text" />
+      <mat-error *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
+        City is required.
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Min. Square Meters</mat-label>
+      <input matInput
+             id="squareMeters"
+             formControlName="squareMeters"
+             type="number"
+             min="1"
+             />
+      <mat-error *ngIf="form.get('squareMeters')?.invalid && form.get('squareMeters')?.touched">
+        Square meters must be greater than 0.
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Min. Floor Number</mat-label>
+      <input matInput id="floorNumber" formControlName="floorNumber" type="number" min="0" />
+      <mat-error *ngIf="form.get('floorNumber')?.invalid && form.get('floorNumber')?.touched">
+        Floor number must be greater than or equal to 0.
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button type="submit" [disabled]="form.invalid">Submit</button>
+</form>
+
+<div class="cards-container">
+  <div class="household-card" *ngFor="let household of households"    
+  [routerLink]="['/household-details', household.id]" >  
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Apartment {{ household.apartmentNumber }}</mat-card-title>
+        <mat-card-subtitle>{{ household.cityName }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Address:</strong> {{ household.address }}</p>
+        <p><strong>Floor:</strong> {{ household.floorNumber }}</p>
+        <p><strong>Size:</strong> {{ household.squareMeters }} m²</p>
+        <p>
+          <strong>Status:</strong> 
+          <span [ngClass]="household.active ? 'active' : 'inactive'">
+            {{ household.active ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
+  
