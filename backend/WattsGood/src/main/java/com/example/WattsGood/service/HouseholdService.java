@@ -1,5 +1,6 @@
 package com.example.WattsGood.service;
 
+import com.example.WattsGood.model.HeartbeatMessage;
 import com.example.WattsGood.model.Household;
 import com.example.WattsGood.repository.IHouseholdRepository;
 import com.example.WattsGood.service.interfaces.IHouseholdService;
@@ -22,5 +23,20 @@ public class HouseholdService implements IHouseholdService {
     @Override
     public List<Household> searchHouseholdsBy(String city, Integer squareMeters, Integer floorNumber){
         return repository.searchHouseholdsBy(city, squareMeters, floorNumber);
+    }
+
+    @Override
+    public Household updateActivity(HeartbeatMessage message) {
+        Household household = repository.getReferenceById(message.getHouseholdId());
+        
+        household.setActive(true);
+        household.setLastHeartbeatTimestamp(message.getTimestamp());
+        return repository.save(household);
+    }
+
+    @Override
+    public void checkAndUpdateInactiveHouseholds(Long currentTime) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkAndUpdateInactiveHouseholds'");
     }
 }

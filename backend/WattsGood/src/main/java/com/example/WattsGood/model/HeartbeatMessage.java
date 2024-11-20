@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class HeartbeatMessage {
 
     @JsonProperty("household_id")
-    private String householdId;
+    private long householdId;
     @JsonProperty("timestamp")
     private long timestamp;
 
     // Getters and Setters
-    public String getHouseholdId() {
+    public long getHouseholdId() {
         return householdId;
     }
 
-    public void setHouseholdId(String householdId) {
+    public void setHouseholdId(long householdId) {
         this.householdId = householdId;
     }
 
